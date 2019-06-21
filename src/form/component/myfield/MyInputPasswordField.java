@@ -32,6 +32,12 @@ public class MyInputPasswordField extends MyField {
         return new String(passField.getPassword());
     }
     
+    
+    @Override
+    public void setValue(Object value) {
+        passField.setText(String.valueOf(value));
+    }
+    
     @Override
     protected void addListeners() {
         passField.addFocusListener(new FocusAdapter() {
@@ -61,5 +67,4 @@ public class MyInputPasswordField extends MyField {
             }
         });
     }
-
 }

@@ -7,10 +7,10 @@ public class Start {
 
     public static void main(String[] args) {
         podesiIzgledForme();
-//        JFrame logIn = new FormLogIn();
-//        logIn.setVisible(true);
-        JFrame main = new FormMain();
-        main.setVisible(true);
+        JFrame logIn = new FormLogIn();
+        logIn.setVisible(true);
+//        JFrame main = new FormMain();
+//        main.setVisible(true);
     }
 
     private static void podesiIzgledForme() {

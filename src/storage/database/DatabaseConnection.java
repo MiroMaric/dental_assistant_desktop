@@ -9,7 +9,7 @@ import utill.SettingsLoader;
 public class DatabaseConnection {
     
     private static DatabaseConnection instance;
-    private Connection connection;
+    private final Connection connection;
     
     private DatabaseConnection() throws SQLException{
         String url = SettingsLoader.getInstance().getDatabaseProperty("url");

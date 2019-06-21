@@ -1,6 +1,7 @@
 package form.component.myfield;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MyInputDateField extends MyInputTextField{
@@ -12,6 +13,11 @@ public class MyInputDateField extends MyInputTextField{
         dateFormat = new SimpleDateFormat(pattern);
     }
 
+    @Override
+    public void setValue(Object value) {
+        txtField.setText(dateFormat.format((Date)value));
+    }
+    
     @Override
     public boolean validInput() {
         try{

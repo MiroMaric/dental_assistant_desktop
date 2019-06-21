@@ -37,7 +37,7 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="btnCeateCardboard" min="-2" pref="118" max="-2" attributes="0"/>
+              <Component id="btn" min="-2" pref="118" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="195" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -48,20 +48,23 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlNewCardboard" min="-2" pref="426" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="btnCeateCardboard" min="-2" pref="32" max="-2" attributes="0"/>
+              <Component id="btn" min="-2" pref="32" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btnCeateCardboard">
+    <Component class="javax.swing.JButton" name="btn">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Kreiraj"/>
+        <Property name="text" type="java.lang.String" value="Btn Text"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCeateCardboardActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JPanel" name="pnlNewCardboard">
       <Properties>

@@ -76,7 +76,7 @@ public class Patient extends Person implements GeneralDObject {
     public void setPatientID(String patientID) {
         this.patientID = patientID;
     }
-    
+
     @Override
     public String getClassName() {
         return "Patient";
@@ -84,40 +84,44 @@ public class Patient extends Person implements GeneralDObject {
 
     @Override
     public String toString() {
-        return firstname+" "+lastname;
+        return firstname + " " + lastname;
     }
-    
+
     @Override
     public String getAtrValue() {
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
         java.sql.Date cardboardDate1 = java.sql.Date.valueOf(sm.format(cardboardDate));
-        java.sql.Date birthDate1 = birthDate==null?null:java.sql.Date.valueOf(sm.format(birthDate));
+        java.sql.Date birthDate1 = birthDate == null ? null : java.sql.Date.valueOf(sm.format(birthDate));
         StringBuilder sb = new StringBuilder();
         sb.append("'").append(patientID).append("'").append(",").
                 append("'").append(getFirstname()).append("'").append(",").
                 append("'").append(getLastname()).append("'").append(",").
-                append(getEmail()==null?null:"'"+getEmail()+"'").append(",").
-                append(birthDate1==null?null:"'"+birthDate1+"'").append(",").
-                append(getAddress()==null?null:"'"+getAddress()+"'").append(",").
-                append(getPhone()==null?null:"'"+getPhone()+"'").append(",").
-                append(cardboardDate1==null?null:"'"+cardboardDate1+"'").append(",").
+                append(email == null ? null : "'" + email + "'").append(",").
+                append(birthDate1 == null ? null : "'" + birthDate1 + "'").append(",").
+                append(address == null ? null : "'" + address + "'").append(",").
+                append(phone == null ? null : "'" + phone + "'").append(",").
+                append("'").append(cardboardDate1).append("'").append(",").
                 append(deactivated);
-//        sb.append("'").append(patientID).
-//                append("', '").append(getFirstname()).
-//                append("', '").append(getLastname()).
-//                append("', '").append(getEmail()).
-//                append("', '").append(birthDate1).
-//                append("', '").append(getAddress()).
-//                append("', '").append(getPhone()).
-//                append("', '").append(cardboardDate1).
-//                append("',").append(deactivated);
         System.out.println(sb.toString());
         return sb.toString();
     }
 
     @Override
     public String setAtrValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+        java.sql.Date cardboardDate1 = java.sql.Date.valueOf(sm.format(cardboardDate));
+        java.sql.Date birthDate1 = birthDate == null ? null : java.sql.Date.valueOf(sm.format(birthDate));
+        StringBuilder sb = new StringBuilder();
+        sb.append("patientID='").append(patientID).
+                append("',firstname='").append(firstname).
+                append("',lastname='").append(lastname).
+                append("',email=").append(email == null ? null : "'" + email + "'").
+                append(",birthDate=").append(birthDate1 == null ? null : "'" + birthDate1 + "'").
+                append(",address=").append(address == null ? null : "'" + address + "'").
+                append(",phone=").append(phone == null ? null : "'" + phone + "'").
+                append(",cardboardDate='").append(cardboardDate1).
+                append("',deactivated=").append(deactivated);
+        return sb.toString();
     }
 
     @Override
@@ -142,7 +146,7 @@ public class Patient extends Person implements GeneralDObject {
 
     @Override
     public String getWhereCondition() {
-        return "patientID = "+"'"+patientID+"'";
+        return "patientID = " + "'" + patientID + "'";
     }
 
 }

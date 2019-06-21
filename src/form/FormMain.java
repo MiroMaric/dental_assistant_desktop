@@ -1,6 +1,8 @@
 package form;
 
+import form.cardboard.FormSearchCardboard;
 import controller.Controller;
+import form.cardboard.FormNewCardboard;
 import form.component.TitleBar;
 import java.awt.BorderLayout;
 import java.awt.Color;

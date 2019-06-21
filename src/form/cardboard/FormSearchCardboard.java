@@ -1,7 +1,10 @@
-package form;
+package form.cardboard;
 
 import controller.Controller;
 import domain.Patient;
+import form.ColorConstant;
+import form.MyTableCellRenderer;
+import form.TableModelPatient;
 import icon.ErrorIcon;
 import java.awt.Color;
 import javax.swing.JOptionPane;

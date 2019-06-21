@@ -10,14 +10,6 @@ import javax.swing.JPanel;
 
 public abstract class MyField extends javax.swing.JPanel {
 
-    protected abstract boolean validInputField();
-
-    protected abstract Object getValueOfField();
-
-    protected abstract void initFiled();
-
-    protected abstract void addListeners();
-
     public MyField(String fieldName, String info, String regEx, boolean require) {
         this.regEx = regEx;
         this.require = require;
@@ -28,18 +20,28 @@ public abstract class MyField extends javax.swing.JPanel {
         addListeners();
     }
 
-    public boolean validInput() {
-        if (isInputNull()) {
-            return true;
-        }
-        return validInputField();
-    }
+    protected abstract boolean validInputField();
+
+    protected abstract Object getValueOfField();
+
+    protected abstract void initFiled();
+
+    protected abstract void addListeners();
+    
+    public abstract void setValue(Object value);
 
     public Object getValue() {
         if (isInputNull()) {
             return null;
         }
         return getValueOfField();
+    }
+
+    public boolean validInput() {
+        if (isInputNull()) {
+            return true;
+        }
+        return validInputField();
     }
 
     @SuppressWarnings("unchecked")

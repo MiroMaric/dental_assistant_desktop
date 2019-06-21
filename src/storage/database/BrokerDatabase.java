@@ -82,6 +82,7 @@ public class BrokerDatabase {
     }
 
     public boolean executeUpdate(String upit) throws SQLException {
+        System.out.println(upit);
         Statement st;
         boolean signal = false;
         st = DatabaseConnection.getInstance().getConnection().prepareStatement(upit);

@@ -1,7 +1,7 @@
 package form.component.patient_profile;
 
 import domain.Patient;
-import form.FormNewCardboard;
+import form.cardboard.FormEditCardboard;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -282,7 +282,7 @@ public class PanelPatientProfile extends javax.swing.JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                new FormNewCardboard(null, true).setVisible(true);
+                new FormEditCardboard(null, true,patient).setVisible(true);
             }
         });
     }

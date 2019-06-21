@@ -6,9 +6,9 @@ public class Person{
 
     protected String firstname;
     protected String lastname;
-    private String email;
-    private String address;
-    private String phone;
+    protected String email;
+    protected String address;
+    protected String phone;
 
     public Person() {
     }

@@ -48,12 +48,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlLogIn" min="-2" pref="130" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblError" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="btnLogIn1" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="btnLogIn" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="lblError" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
           </Group>

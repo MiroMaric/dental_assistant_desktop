@@ -11,8 +11,8 @@ public class MyInputTextField extends MyField {
 
     protected JTextField txtField;
 
-    public MyInputTextField(String fieldName, String info, String regEx,boolean require) {
-        super(fieldName, info, regEx,require);
+    public MyInputTextField(String fieldName, String info, String regEx, boolean require) {
+        super(fieldName, info, regEx, require);
     }
 
     @Override
@@ -28,9 +28,15 @@ public class MyInputTextField extends MyField {
 
     @Override
     public Object getValueOfField() {
-        if(!require && cmbEmpty.isSelected())
+        if (!require && cmbEmpty.isSelected()) {
             return null;
+        }
         return txtField.getText();
+    }
+
+    @Override
+    public void setValue(Object value) {
+        txtField.setText(String.valueOf(value));
     }
 
     @Override
@@ -46,7 +52,7 @@ public class MyInputTextField extends MyField {
                 getLblInfo().setVisible(false);
             }
         });
-        
+
         if (regEx == null) {
             return;
         }
@@ -62,4 +68,5 @@ public class MyInputTextField extends MyField {
             }
         });
     }
+
 }

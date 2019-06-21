@@ -1,8 +1,11 @@
-package form;
+package form.cardboard;
 
 import controller.Controller;
 import domain.Patient;
 import domain.tooth.Tooth;
+import form.ColorConstant;
+import form.MyTableCellRenderer;
+import form.TableModelToothInterventions;
 import form.component.PanelJaw;
 import form.component.PanelLegend;
 import form.component.PanelTeeth;
@@ -39,8 +42,8 @@ public class FormCardboard extends javax.swing.JFrame {
     int x = 95;
 
     public FormCardboard(Patient patient) {
-        //this.patient = patient;
-        this.patient = controller.Controller.getInstance().getPatient(new Patient("2bc00871-2bf0-4809-baf3-209e4de17dd4"));
+        this.patient = patient;
+        //this.patient = controller.Controller.getInstance().getPatient(new Patient("2bc00871-2bf0-4809-baf3-209e4de17dd4"));
         pnlJaw = new PanelJaw();
         initComponents();
         adjustForm();

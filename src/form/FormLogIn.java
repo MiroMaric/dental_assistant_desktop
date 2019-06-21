@@ -75,11 +75,11 @@ public class FormLogIn extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(pnlLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblError)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnLogIn1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblError))
                 .addGap(10, 10, 10))
         );
 
@@ -116,15 +116,17 @@ public class FormLogIn extends javax.swing.JFrame {
     private javax.swing.JLabel lblError;
     private javax.swing.JPanel pnlLogIn;
     // End of variables declaration//GEN-END:variables
-    
+
     //Moja polja
     MyField pnlUsername;
     MyField pnlPassword;
-    
+
     //Dodeljivanje vrednosti mojim poljima
     private void initFields() {
-        pnlUsername = new MyInputTextField("Korisničko ime", "", null,true);
-        pnlPassword = new MyInputPasswordField("Sifra:", "", null,true);
+        pnlUsername = new MyInputTextField("Korisničko ime", "", null, true);
+        pnlUsername.setValue("miko");
+        pnlPassword = new MyInputPasswordField("Sifra:", "", null, true);
+        pnlPassword.setValue("mikomaric");
         pnlLogIn.add(pnlUsername);
         pnlLogIn.add(pnlPassword);
     }

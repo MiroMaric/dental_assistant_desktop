@@ -87,6 +87,7 @@ public class Controller {
                 }
             }
             DatabaseConnection.getInstance().getConnection().commit();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,7 +189,7 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void updateAppointment(Appointment appointment) {
         try {
             brokerDatabase.updateRecord(appointment);
@@ -230,5 +231,14 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public boolean updatePatient(Patient patient) {
+        try {
+            return brokerDatabase.updateRecord(patient);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

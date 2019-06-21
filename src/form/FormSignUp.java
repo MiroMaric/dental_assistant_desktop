@@ -77,13 +77,13 @@ public class FormSignUp extends javax.swing.JFrame {
         boolean ok = Controller.getInstance().insertRecord(user);
     }//GEN-LAST:event_btnSignUpActionPerformed
 
-    MyField pnlUsername;
-    MyField pnlPassword;
-    MyField pnlEmail;
-    MyField pnlFirstname;
-    MyField pnlLastname;
-    MyField pnlAdress;
-    MyField pnlPhone;
+    private MyField pnlUsername;
+    private MyField pnlPassword;
+    private MyField pnlEmail;
+    private MyField pnlFirstname;
+    private MyField pnlLastname;
+    private MyField pnlAdress;
+    private MyField pnlPhone;
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
