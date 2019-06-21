@@ -1,12 +1,10 @@
 package form.component;
 
 import domain.Patient;
-import form.ColorConstant;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Date;
-import net.miginfocom.swing.MigLayout;
 
 public class PanelTeeth extends javax.swing.JPanel {
 

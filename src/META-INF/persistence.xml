@@ -5,9 +5,10 @@
     <class>temp.Patient</class>
     <class>controller.Patient</class>
     <class>controller.Appointment</class>
-    <class>controller.User</class>
     <class>temp.User</class>
     <class>temp.Appointment</class>
+    <class>temp.InterventionItem</class>
+    <class>temp.Intervention</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dental_assistant?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

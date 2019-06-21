@@ -6,7 +6,7 @@
 package temp;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,14 +27,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "user")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
-    , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
-    , @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")
-    , @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
-    , @NamedQuery(name = "User.findByFirstname", query = "SELECT u FROM User u WHERE u.firstname = :firstname")
-    , @NamedQuery(name = "User.findByLastname", query = "SELECT u FROM User u WHERE u.lastname = :lastname")
-    , @NamedQuery(name = "User.findByAddress", query = "SELECT u FROM User u WHERE u.address = :address")
-    , @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone")})
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
+    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findByFirstname", query = "SELECT u FROM User u WHERE u.firstname = :firstname"),
+    @NamedQuery(name = "User.findByLastname", query = "SELECT u FROM User u WHERE u.lastname = :lastname"),
+    @NamedQuery(name = "User.findByAddress", query = "SELECT u FROM User u WHERE u.address = :address"),
+    @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,8 +58,8 @@ public class User implements Serializable {
     private String address;
     @Column(name = "phone")
     private String phone;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Collection<Appointment> appointmentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userID")
+    private List<Intervention> interventionList;
 
     public User() {
     }
@@ -133,12 +133,12 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Appointment> getAppointmentCollection() {
-        return appointmentCollection;
+    public List<Intervention> getInterventionList() {
+        return interventionList;
     }
 
-    public void setAppointmentCollection(Collection<Appointment> appointmentCollection) {
-        this.appointmentCollection = appointmentCollection;
+    public void setInterventionList(List<Intervention> interventionList) {
+        this.interventionList = interventionList;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "temp.User[ username=" + username + " ]";
+        return "controller.User[ username=" + username + " ]";
     }
     
 }

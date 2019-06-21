@@ -81,12 +81,12 @@ public class FormNewCardboard extends javax.swing.JDialog {
     private javax.swing.JButton btnCeateCardboard;
     private javax.swing.JPanel pnlNewCardboard;
     // End of variables declaration//GEN-END:variables
-    MyField pnlFirstname;
-    MyField pnlLastname;
-    MyField pnlEmail;
-    MyField pnlBirthDate;
-    MyField pnlAdress;
-    MyField pnlPhone;
+    private MyField pnlFirstname;
+    private MyField pnlLastname;
+    private MyField pnlEmail;
+    private MyField pnlBirthDate;
+    private MyField pnlAdress;
+    private MyField pnlPhone;
 
     private void ajdustDialog() {
         getContentPane().setBackground(ColorConstant.GREEN_SPRING);
