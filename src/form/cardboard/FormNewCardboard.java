@@ -3,6 +3,7 @@ package form.cardboard;
 import controller.Controller;
 import domain.Patient;
 import icon.ErrorIcon;
+import icon.SuccessIcon;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
@@ -13,8 +14,8 @@ import javax.swing.JOptionPane;
  */
 public class FormNewCardboard extends FormCardboardInfo {
 
-    public FormNewCardboard(Frame parent, boolean modal) {
-        super(parent, modal);
+    public FormNewCardboard(Frame parent, boolean modal,Patient patient) {
+        super(parent, modal,patient);
         prepareForm();
     }
 
@@ -23,9 +24,9 @@ public class FormNewCardboard extends FormCardboardInfo {
         btn.setText("Kreiraj");
         btn.addActionListener((ActionEvent e) -> {
             if (formIsValid()) {
-                Patient patient = getPatient();
+                populatePatient();
                 if (Controller.getInstance().savePatient(patient)) {
-                    JOptionPane.showMessageDialog(this, "Novi karton je krairan", "", JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(this, "Novi karton je krairan", "Uspešno kreiranje", JOptionPane.OK_OPTION,new SuccessIcon());
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Došlo je do greške", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());

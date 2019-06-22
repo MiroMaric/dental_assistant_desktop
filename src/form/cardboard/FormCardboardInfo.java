@@ -12,10 +12,12 @@ import java.util.List;
 public class FormCardboardInfo extends javax.swing.JDialog {
 
     private final List<MyField> myFields;
+    protected Patient patient;
     
-    public FormCardboardInfo(java.awt.Frame parent, boolean modal) {
+    public FormCardboardInfo(java.awt.Frame parent, boolean modal,Patient patient) {
         super(parent, modal);
         myFields = new ArrayList<>();
+        this.patient = patient;
         initComponents();
         ajdustDialog();
         initFields();
@@ -115,14 +117,23 @@ public class FormCardboardInfo extends javax.swing.JDialog {
         myFields.add(pnlPhone);
     }
 
-    protected Patient getPatient() {
+    protected void populatePatient() {
         String firstname = (String) pnlFirstname.getValue();
         String lastname = (String) pnlLastname.getValue();
         String email = (String) pnlEmail.getValue();
         Date birthDate = (Date) pnlBirthDate.getValue();
         String adress = (String) pnlAdress.getValue();
         String phone = (String) pnlPhone.getValue();
-        return new Patient(firstname, lastname, email, adress, phone, birthDate, new Date());
+        if(patient!=null){
+            patient.setFirstname(firstname);
+            patient.setLastname(lastname);
+            patient.setEmail(email);
+            patient.setBirthDate(birthDate);
+            patient.setAddress(adress);
+            patient.setPhone(phone);
+        }else{
+            patient =  new Patient(firstname, lastname, email, adress, phone, birthDate, new Date());
+        }
     }
     
     protected void populateForm(Patient patient){

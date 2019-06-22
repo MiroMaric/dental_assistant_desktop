@@ -8,6 +8,7 @@ public abstract class PanelNewInterventionItem extends javax.swing.JPanel {
 
     //Kloniraj zub
     protected Tooth tooth;
+    
     public PanelNewInterventionItem(Tooth tooth) {
         this.tooth = tooth;
         initComponents();

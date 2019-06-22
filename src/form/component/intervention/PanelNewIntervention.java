@@ -16,10 +16,10 @@ import javax.swing.JPanel;
 
 public class PanelNewIntervention extends javax.swing.JPanel {
 
-    Intervention intervention;
-    PanelNewInterventionItem pnlNewInterventionItem;
-    TableModelToothInterventions tableModelToothInterventions;
-    Tooth tooth;
+    private Intervention intervention;
+    private PanelNewInterventionItem pnlNewInterventionItem;
+    private TableModelToothInterventions tableModelToothInterventions;
+    private Tooth tooth;
 
     public PanelNewIntervention(Tooth tooth) {
         this.tooth = tooth;

@@ -53,7 +53,7 @@ public class PanelMenuItem extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void setMenuItemIcon() {
-        lblMenuItem.setIcon(new ImageIcon(getClass().getResource("/icon/" + iconName + ".png")));
+        lblMenuItem.setIcon(new ImageIcon("icons/" + iconName + ".png"));
     }
 
     public void setContent(JPanel content) {
@@ -61,7 +61,7 @@ public class PanelMenuItem extends javax.swing.JPanel {
     }
 
     public void setMenuItemPointer() {
-        lblMenuItemPointer.setIcon(new ImageIcon(getClass().getResource("/icon/pointer.png")));
+        lblMenuItemPointer.setIcon(new ImageIcon("icons/pointer.png"));
     }
 
     public void removeMenuItemPointer() {

@@ -71,9 +71,6 @@
               <Color blue="ff" green="99" red="66" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/img/newCardboard.png"/>
-            </Property>
             <Property name="toolTipText" type="java.lang.String" value="Novi karton"/>
           </Properties>
           <Events>
@@ -86,9 +83,6 @@
               <Color blue="ff" green="99" red="66" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/img/searchCardboard.png"/>
-            </Property>
             <Property name="toolTipText" type="java.lang.String" value="Novi karton"/>
           </Properties>
           <Events>

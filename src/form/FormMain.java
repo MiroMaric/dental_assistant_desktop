@@ -55,7 +55,6 @@ public class FormMain extends javax.swing.JFrame {
 
         lblNewCardboard.setBackground(new java.awt.Color(102, 153, 255));
         lblNewCardboard.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblNewCardboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/newCardboard.png"))); // NOI18N
         lblNewCardboard.setToolTipText("Novi karton");
         lblNewCardboard.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -65,7 +64,6 @@ public class FormMain extends javax.swing.JFrame {
 
         lblSearchCardboard.setBackground(new java.awt.Color(102, 153, 255));
         lblSearchCardboard.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSearchCardboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/searchCardboard.png"))); // NOI18N
         lblSearchCardboard.setToolTipText("Novi karton");
         lblSearchCardboard.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -255,7 +253,7 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_lblScheduleSettingsMouseClicked
 
     private void lblNewCardboardMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewCardboardMousePressed
-        new FormNewCardboard(this, true).setVisible(true);
+        new FormNewCardboard(this, true,null).setVisible(true);
     }//GEN-LAST:event_lblNewCardboardMousePressed
 
     private void lblSearchCardboardMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchCardboardMousePressed
@@ -318,33 +316,35 @@ public class FormMain extends javax.swing.JFrame {
     }
 
     private void adjustIcons() {
-        lblCenterLogo.setIcon(new ImageIcon(getClass().getResource("/img/logo.png")));
-        lblSearchAppointment.setIcon(new ImageIcon(getClass().getResource("/icon/search.png")));
-        lblNext.setIcon(new ImageIcon(getClass().getResource("/icon/next.png")));
-        lblPrevious.setIcon(new ImageIcon(getClass().getResource("/icon/previous.png")));
-        lblScheduleSettings.setIcon(new ImageIcon(getClass().getResource("/icon/settings.png")));
+        lblCenterLogo.setIcon(new ImageIcon("icons/logo.png"));
+        lblSearchAppointment.setIcon(new ImageIcon("icons/search.png"));
+        lblNext.setIcon(new ImageIcon("icons/next.png"));
+        lblPrevious.setIcon(new ImageIcon("icons/previous.png"));
+        lblScheduleSettings.setIcon(new ImageIcon("icons/settings.png"));
+        lblNewCardboard.setIcon(new ImageIcon("icons/newCardboard.png"));
+        lblSearchCardboard.setIcon(new ImageIcon("icons/searchCardboard.png"));
         
         lblNewCardboard.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                lblNewCardboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/newCardboardMax.png")));
+                lblNewCardboard.setIcon(new javax.swing.ImageIcon("icons/newCardboardMax.png"));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                lblNewCardboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/newCardboard.png")));
+                lblNewCardboard.setIcon(new javax.swing.ImageIcon("icons/newCardboard.png"));
             }
         });
 
         lblSearchCardboard.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                lblSearchCardboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/searchCardboardMax.png")));
+                lblSearchCardboard.setIcon(new javax.swing.ImageIcon("icons/searchCardboardMax.png"));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                lblSearchCardboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/searchCardboard.png")));
+                lblSearchCardboard.setIcon(new javax.swing.ImageIcon("icons/searchCardboard.png"));
             }
         });
     }

@@ -22,7 +22,7 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
 
     SideIntervention sideIntervention;
     List<ToothSideState> currentStatesOfSides;
-    List<JLabel> lblsSideLabel;
+    List<JLabel> lblsSideLabels;
     PanelToothSides toothView;
     HashMap<String, ToothSideState> hashMapToothSideStates;
     int selectedSideIndex = -1;
@@ -32,7 +32,7 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
         initComponents();
         currentStatesOfSides = this.tooth.getCurrentStatesOfSides();
         sideIntervention = new SideIntervention();
-        lblsSideLabel = new LinkedList<>();
+        lblsSideLabels = new LinkedList<>();
         hashMapToothSideStates = new HashMap<>();
         adjustPanel();
         populateLblSideLabelsList();
@@ -193,11 +193,11 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
     }
 
     private void populateLblSideLabelsList() {
-        lblsSideLabel.add(lblVestibularna);
-        lblsSideLabel.add(lblOralna);
-        lblsSideLabel.add(lblMezijalna);
-        lblsSideLabel.add(lblDistalna);
-        lblsSideLabel.add(lblMastikatorna);
+        lblsSideLabels.add(lblVestibularna);
+        lblsSideLabels.add(lblOralna);
+        lblsSideLabels.add(lblMezijalna);
+        lblsSideLabels.add(lblDistalna);
+        lblsSideLabels.add(lblMastikatorna);
     }
 
     private void prepereTooth() {
@@ -232,17 +232,17 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
     }
 
     private void addMouserPressedListenerToToothSideLabelLbls() {
-        lblsSideLabel.forEach((lbl) -> {
+        lblsSideLabels.forEach((lbl) -> {
             lbl.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    lblsSideLabel.forEach((l) -> {
+                    lblsSideLabels.forEach((l) -> {
                         l.setBorder(BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
                     });
                     lbl.setBorder(BorderFactory.createLineBorder(Color.RED));
                     //Razmisli o ovome!!!
-                    sideIntervention.setToothSide(tooth.getSides().get(lblsSideLabel.indexOf(lbl)));
-                    selectedSideIndex = lblsSideLabel.indexOf(lbl);
+                    sideIntervention.setToothSide(tooth.getSides().get(lblsSideLabels.indexOf(lbl)));
+                    selectedSideIndex = lblsSideLabels.indexOf(lbl);
                     prepereTooth();
                 }
             });
@@ -275,7 +275,7 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
 
     private void setTheInitialState() {
         sideIntervention = new SideIntervention();
-        lblsSideLabel.forEach((t) -> {
+        lblsSideLabels.forEach((t) -> {
             t.setBorder(BorderFactory.createEtchedBorder((javax.swing.border.EtchedBorder.RAISED)));
         });
         btnGroupSideStates.clearSelection();

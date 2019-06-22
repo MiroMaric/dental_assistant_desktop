@@ -16,7 +16,7 @@ public class PanelJaw extends JPanel {
     private Image image;
     public PanelJaw() {
         try {
-            bifferedImage = ImageIO.read(new File("src/img/teeth.png"));
+            bifferedImage = ImageIO.read(new File("icons/teeth.png"));
             image = bifferedImage.getScaledInstance(400, 600, Image.SCALE_DEFAULT);
         } catch (IOException ex) {
             Logger.getLogger(PanelJaw.class.getName()).log(Level.SEVERE, null, ex);
