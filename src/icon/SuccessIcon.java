@@ -8,6 +8,6 @@ import javax.swing.ImageIcon;
  */
 public class SuccessIcon extends ImageIcon{
      public SuccessIcon() {
-        super("src/img/success.png");
+        super("icons/success.png");
     }
 }

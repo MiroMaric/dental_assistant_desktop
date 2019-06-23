@@ -4,6 +4,7 @@ import controller.Controller;
 import domain.intervention.InterventionItem;
 import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
+import domain.tooth.ToothSideLabel;
 import domain.tooth.ToothSideState;
 import form.ColorConstant;
 import form.component.PanelToothSides;
@@ -20,17 +21,17 @@ import javax.swing.JRadioButton;
 
 public class PanelNewSideIntervention extends PanelNewInterventionItem {
 
-    SideIntervention sideIntervention;
-    List<ToothSideState> currentStatesOfSides;
-    List<JLabel> lblsSideLabels;
-    PanelToothSides toothView;
-    HashMap<String, ToothSideState> hashMapToothSideStates;
+    private SideIntervention sideIntervention;
+    private HashMap<ToothSideLabel,ToothSideState> currentStatesOfSides;
+    private List<JLabel> lblsSideLabels;
+    private PanelToothSides toothView;
+    private HashMap<String, ToothSideState> hashMapToothSideStates;
     int selectedSideIndex = -1;
-    
+
     public PanelNewSideIntervention(Tooth tooth) {
         super(tooth);
         initComponents();
-        currentStatesOfSides = this.tooth.getCurrentStatesOfSides();
+        currentStatesOfSides = tooth.getCurrentStatesOfSides();
         sideIntervention = new SideIntervention();
         lblsSideLabels = new LinkedList<>();
         hashMapToothSideStates = new HashMap<>();
@@ -202,14 +203,19 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
 
     private void prepereTooth() {
         if (sideIntervention.getState() != null && sideIntervention.getToothSide() != null) {
-            currentStatesOfSides.set(selectedSideIndex,sideIntervention.getState());
-            refreshView();
-            undoCurrentStatesOfSides();
+            currentStatesOfSides.put(sideIntervention.getToothSide().getLabel(), sideIntervention.getState());
+            toothView = new PanelToothSides(currentStatesOfSides, 90);
+            pnlView.removeAll();
+            pnlView.add(toothView);
+            pnlView.revalidate();
+            currentStatesOfSides = tooth.getCurrentStatesOfSides();
         }
     }
 
-    private void refreshView() {
-        toothView = new PanelToothSides(currentStatesOfSides,90);
+    @Override
+    public void refreshView() {
+        currentStatesOfSides = tooth.getCurrentStatesOfSides();
+        toothView = new PanelToothSides(currentStatesOfSides, 90);
         pnlView.removeAll();
         pnlView.add(toothView);
         pnlView.revalidate();
@@ -241,7 +247,7 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
                     });
                     lbl.setBorder(BorderFactory.createLineBorder(Color.RED));
                     //Razmisli o ovome!!!
-                    sideIntervention.setToothSide(tooth.getSides().get(lblsSideLabels.indexOf(lbl)));
+                    sideIntervention.setToothSide(tooth.getToothSide(lblsSideLabels.indexOf(lbl)));
                     selectedSideIndex = lblsSideLabels.indexOf(lbl);
                     prepereTooth();
                 }
@@ -259,15 +265,12 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
             }
         });
     }
-    
-    private void undoCurrentStatesOfSides() {
-        currentStatesOfSides = tooth.getCurrentStatesOfSides();
-    }
-    
+
     @Override
     public InterventionItem getInterventionItem() {
-        if(sideIntervention.getState()==null || sideIntervention.getToothSide()==null)
+        if (sideIntervention.getState() == null || sideIntervention.getToothSide() == null) {
             return null;
+        }
         SideIntervention pom = sideIntervention;
         setTheInitialState();
         return pom;

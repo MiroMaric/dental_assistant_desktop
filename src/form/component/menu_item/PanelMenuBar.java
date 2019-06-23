@@ -11,9 +11,10 @@ import javax.swing.JPanel;
 
 public class PanelMenuBar extends javax.swing.JPanel {
 
-    List<PanelMenuItem> menuItems;
-    PanelMenuItem currentlyActiveMenuItem;
-    JPanel dynamicContent;
+    private final List<PanelMenuItem> menuItems;
+    private PanelMenuItem currentlyActiveMenuItem;
+    private final JPanel dynamicContent;
+    
     public PanelMenuBar(JPanel dynamicContent) {
         menuItems = new LinkedList<>();
         this.dynamicContent = dynamicContent;
@@ -46,8 +47,11 @@ public class PanelMenuBar extends javax.swing.JPanel {
 
     public void addNewMenuItem(JPanel panel, String iconName) {
         PanelMenuItem menuItem = new PanelMenuItem(panel, iconName);
-        if(currentlyActiveMenuItem==null)
+        if(currentlyActiveMenuItem==null){
             currentlyActiveMenuItem = menuItem;
+            currentlyActiveMenuItem.setMenuItemPointer();
+            refreshDynamicContent();
+        }
         menuItems.add(menuItem);
         add(menuItem);
         revalidate();
@@ -66,8 +70,8 @@ public class PanelMenuBar extends javax.swing.JPanel {
                 menuItems.forEach((t) -> {
                     t.removeMenuItemPointer();
                 });
-                menuItem.setMenuItemPointer();
                 currentlyActiveMenuItem = menuItem;
+                currentlyActiveMenuItem.setMenuItemPointer();
                 refreshDynamicContent();
             }
         });

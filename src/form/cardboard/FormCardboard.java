@@ -37,10 +37,11 @@ public class FormCardboard extends javax.swing.JFrame {
     TableModelToothInterventions tableModelToothInterventions;
     PanelMenuBar menuBar;
     int x = 95;
+    private PanelNewIntervention pnlNewIntervention;
 
     public FormCardboard(Patient patient) {
-        this.patient = patient;
-        //this.patient = controller.Controller.getInstance().getPatient(new Patient("2bc00871-2bf0-4809-baf3-209e4de17dd4"));
+        //this.patient = patient;
+        this.patient = controller.Controller.getInstance().getPatient(new Patient("2bc00871-2bf0-4809-baf3-209e4de17dd4"));
         pnlJaw = new PanelJaw();
         initComponents();
         adjustForm();
@@ -52,7 +53,7 @@ public class FormCardboard extends javax.swing.JFrame {
         paintForm();
         setStartLook();
         prepareMenu();
-        this.patient.getTeeth().forEach(t->System.out.println(t.getLabel().getToothLabelID()));
+        this.patient.getTeeth().forEach(t -> System.out.println(t.getLabel().getToothLabelID()));
     }
 
     public static void main(String[] args) {
@@ -356,7 +357,6 @@ public class FormCardboard extends javax.swing.JFrame {
                     break;
             }
         }
-
     }
 
     private void addListenerToTooth(JLabel lbl) {
@@ -366,10 +366,7 @@ public class FormCardboard extends javax.swing.JFrame {
                 removeTeethBorders();
                 lbl.setBorder(new LineBorder(Color.yellow, 2));
                 selectedTooth = patient.getTeeth().get(Integer.parseInt(lbl.getName()));
-                tableModelToothInterventions.setTooth(selectedTooth);
-                pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth,100));
                 refreshToothViews(new Date());
-                refreshNewInterventionPanel();
             }
 
             private void removeTeethBorders() {
@@ -398,7 +395,6 @@ public class FormCardboard extends javax.swing.JFrame {
 //                }
 //                return panelToothRoots;
 //            }
-
         });
     }
 
@@ -410,16 +406,15 @@ public class FormCardboard extends javax.swing.JFrame {
         addRowSelectListenerTblToothInterventions();
     }
 
-    private void removeToothViews() {
+    public void refreshToothViews(Date date) {
         pnlToothRoots.removeAll();
-        pnlToothSides.removeAll();
-    }
-
-    private void refreshToothViews(Date date) {
-        removeToothViews();
-        pnlToothSides.add(new PanelToothSides(selectedTooth, date));
-        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth,100));
+        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100));
         pnlToothRoots.revalidate();
+        pnlToothSides.removeAll();
+        pnlToothSides.add(new PanelToothSides(selectedTooth, date));
+        tableModelToothInterventions.setTooth(selectedTooth);
+        populateTeethView();
+        pnlNewIntervention.setNewTooth(selectedTooth);
     }
 
     private void addRowSelectListenerTblToothInterventions() {
@@ -448,26 +443,22 @@ public class FormCardboard extends javax.swing.JFrame {
             pnlRootStateLegend.add(new PanelLegend(new Color(state.getColor()), state.getName()));
         });
     }
-    
+
     private void setStartLook() {
         selectedTooth = patient.getTeeth().get(0);
         ((JLabel) pnlJaw.getComponents()[0]).setBorder(new LineBorder(Color.yellow, 2));
         tableModelToothInterventions.setTooth(selectedTooth);
-        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth,100));
+        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100));
         pnlToothSides.add(new PanelToothSides(selectedTooth, tableModelToothInterventions.getInterventionDate(0)));
     }
 
     private void prepareMenu() {
         menuBar = new PanelMenuBar(pnlDynamicContent);
         pnlMenu.add(menuBar);
-        menuBar.addNewMenuItem(new PanelNewIntervention(selectedTooth), "newIntervention");
+        pnlNewIntervention = new PanelNewIntervention(this, selectedTooth);
+        menuBar.addNewMenuItem(pnlNewIntervention, "newIntervention");
         menuBar.addNewMenuItem(new PanelPatientProfile(patient), "user");
         menuBar.addNewMenuItem(new PanelPatientStatistics(patient), "statistics");
-        refreshNewInterventionPanel();
-    }
-
-    private void refreshNewInterventionPanel() {
-        menuBar.refreshMenuItem(new PanelNewIntervention(selectedTooth), 0);
     }
 
     private void populateTeethView() {

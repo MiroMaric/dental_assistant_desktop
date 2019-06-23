@@ -6,7 +6,6 @@ import domain.tooth.Tooth;
 
 public abstract class PanelNewInterventionItem extends javax.swing.JPanel {
 
-    //Kloniraj zub
     protected Tooth tooth;
     
     public PanelNewInterventionItem(Tooth tooth) {
@@ -35,5 +34,6 @@ public abstract class PanelNewInterventionItem extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     
     public abstract InterventionItem getInterventionItem();
+    public abstract void refreshView();
     
 }

@@ -36,7 +36,7 @@ public class MyInputTextField extends MyField {
 
     @Override
     public void setValue(Object value) {
-        txtField.setText(String.valueOf(value));
+        txtField.setText(value==null?"":String.valueOf(value));
     }
 
     @Override
@@ -61,9 +61,9 @@ public class MyInputTextField extends MyField {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (!validInput()) {
-                    lblIcon.setIcon(new ImageIcon(getClass().getResource("/icon/false.png")));
+                    lblIcon.setIcon(new ImageIcon("icons/false.png"));
                 } else {
-                    lblIcon.setIcon(new ImageIcon(getClass().getResource("/icon/true.png")));
+                    lblIcon.setIcon(new ImageIcon("icons/true.png"));
                 }
             }
         });

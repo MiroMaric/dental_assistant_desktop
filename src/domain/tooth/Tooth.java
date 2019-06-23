@@ -8,11 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-public class Tooth implements GeneralDObject, Cloneable {
+public class Tooth implements GeneralDObject {
 
     private String toothID;
     private Patient patient;
@@ -103,7 +105,6 @@ public class Tooth implements GeneralDObject, Cloneable {
     }
 
     public List<InterventionItem> getAllInterventions() {
-        //1.getAllSideInterventions();
         List<InterventionItem> interventions = new LinkedList<>();
         sides.forEach(side -> {
             side.getSideInterventions().forEach(i -> {
@@ -123,13 +124,16 @@ public class Tooth implements GeneralDObject, Cloneable {
         return interventions;
     }
 
-    public List<ToothSideState> getCurrentStatesOfSides() {
-        List<ToothSideState> states = new LinkedList<>();
-        sides.forEach(side -> {
-            states.add(side.getSideInterventions().stream()
-                    .max((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate())).get().getState());
+    public HashMap<ToothSideLabel, ToothSideState> getCurrentStatesOfSides() {
+        HashMap<ToothSideLabel, ToothSideState> states = new HashMap<>();
+        sides.forEach((side) -> {
+            states.put(side.getLabel(), side.getSideInterventions().stream().max((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate())).get().getState());
         });
         return states;
+    }
+
+    public ToothSide getToothSide(int indexOf) {
+        return sides.get(indexOf);
     }
 
     public ToothSideState getSideStateAtDate(int i, Date date) {
@@ -185,6 +189,28 @@ public class Tooth implements GeneralDObject, Cloneable {
         String toothLabelID1 = rs.getString("toothLabelID");
         String toothStateID1 = rs.getString("toothStateID");
         return new Tooth(toothID1, new Patient(patientID1), new ToothLabel(toothLabelID1), new ToothState(toothStateID1));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.toothID);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Tooth other = (Tooth) obj;
+        return Objects.equals(this.toothID, other.toothID);
     }
 
 }

@@ -11,9 +11,9 @@ import javax.swing.table.AbstractTableModel;
 
 public class TableModelToothInterventions extends AbstractTableModel{
 
-    Tooth tooth;
-    List<InterventionItem> interventions;
-    String[] columns;
+    private Tooth tooth;
+    private List<InterventionItem> interventions;
+    private final String[] columns;
     
     public TableModelToothInterventions(Tooth tooth) {
         this.tooth = tooth;
@@ -75,5 +75,14 @@ public class TableModelToothInterventions extends AbstractTableModel{
             default:
                 return "N/A";
         }
+    }
+
+    public void removeInterventionItem(int index) {
+        interventions.remove(index);
+        fireTableDataChanged();
+    }
+
+    public InterventionItem getInterventionItem(int index) {
+        return interventions.get(index);
     }
 }

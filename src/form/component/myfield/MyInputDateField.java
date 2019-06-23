@@ -15,7 +15,7 @@ public class MyInputDateField extends MyInputTextField{
 
     @Override
     public void setValue(Object value) {
-        txtField.setText(dateFormat.format((Date)value));
+        txtField.setText(value==null?"":dateFormat.format((Date)value));
     }
     
     @Override

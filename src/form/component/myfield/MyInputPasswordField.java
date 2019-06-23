@@ -60,9 +60,9 @@ public class MyInputPasswordField extends MyField {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (!validInput()) {
-                    lblIcon.setIcon(new ImageIcon(getClass().getResource("/icon/false.png")));
+                    lblIcon.setIcon(new ImageIcon("icons/false.png"));
                 } else {
-                    lblIcon.setIcon(new ImageIcon(getClass().getResource("/icon/true.png")));
+                    lblIcon.setIcon(new ImageIcon("icons/true.png"));
                 }
             }
         });

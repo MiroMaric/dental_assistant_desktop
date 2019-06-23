@@ -1,31 +1,42 @@
 package form.component.intervention;
 
+import domain.Patient;
 import domain.intervention.Intervention;
 import domain.intervention.InterventionItem;
+import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
+import domain.tooth.ToothSide;
+import domain.tooth.ToothSideLabel;
+import domain.tooth.ToothSideState;
 import form.ColorConstant;
 import form.MyTableCellRenderer;
 import form.TableModelToothInterventions;
+import form.cardboard.FormCardboard;
 import icon.ErrorIcon;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class PanelNewIntervention extends javax.swing.JPanel {
 
+    private FormCardboard parent;
+    private Tooth tooth;
     private Intervention intervention;
     private PanelNewInterventionItem pnlNewInterventionItem;
     private TableModelToothInterventions tableModelToothInterventions;
-    private Tooth tooth;
+    private List<SideIntervention> sideInterventions;
 
-    public PanelNewIntervention(Tooth tooth) {
+    public PanelNewIntervention(FormCardboard parent,Tooth tooth) {
+        this.parent = parent;
         this.tooth = tooth;
+        prepareTempFields();
         initComponents();
         adjustPanel();
-        prepareIntervention();
         prepareTblInterventionItem();
         paintPanel();
         setStartView();
@@ -44,11 +55,13 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         tblInterventionItems = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        pnlSaveIntervention = new javax.swing.JButton();
         pnlNewInterventionMenu = new javax.swing.JPanel();
         lblSideMenuItem = new javax.swing.JLabel();
         lblRootMenuItem = new javax.swing.JLabel();
         lblToothMenuItem = new javax.swing.JLabel();
+        lblInterventionNote = new javax.swing.JLabel();
+        btnRemoveInterventionItem = new javax.swing.JButton();
 
         txtItemNote.setColumns(15);
         txtItemNote.setLineWrap(true);
@@ -95,7 +108,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         jTextArea2.setRows(5);
         jScrollPane3.setViewportView(jTextArea2);
 
-        jButton2.setText("Sacuvaj");
+        pnlSaveIntervention.setText("Sacuvaj");
 
         lblSideMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblSideMenuItem.setForeground(new java.awt.Color(255, 255, 255));
@@ -158,19 +171,24 @@ public class PanelNewIntervention extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        lblInterventionNote.setText("Opis intervencije:");
+
+        btnRemoveInterventionItem.setText("Ukloni");
+        btnRemoveInterventionItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveInterventionItemActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlNewInterventionMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlDynamicContent, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,9 +200,18 @@ public class PanelNewIntervention extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                                 .addComponent(btnAddInterventionitem, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(14, 14, 14)))))
+                                .addGap(14, 14, 14))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblInterventionNote, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(166, 166, 166))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnRemoveInterventionItem, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                            .addComponent(pnlSaveIntervention, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
-            .addComponent(pnlNewInterventionMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,10 +229,17 @@ public class PanelNewIntervention extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnRemoveInterventionItem, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pnlSaveIntervention, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(lblInterventionNote)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 18, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -235,29 +269,46 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         item.setNote(itemNote);
         item.setIntervention(intervention);
         tableModelToothInterventions.addInterventionItem(item);
+        if (item instanceof SideIntervention) {
+            SideIntervention sideIntervention = (SideIntervention) item;
+            tooth.getSides().get(tooth.getSides().indexOf(sideIntervention.getToothSide())).getSideInterventions().add(sideIntervention);
+            sideInterventions.add(sideIntervention);
+        }
+        parent.refreshToothViews(new Date());
+        pnlNewInterventionItem.refreshView();
     }//GEN-LAST:event_btnAddInterventionitemActionPerformed
+
+    private void btnRemoveInterventionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInterventionItemActionPerformed
+        int index = tblInterventionItems.getSelectedRow();
+        InterventionItem interventionItem = tableModelToothInterventions.getInterventionItem(index);
+        tableModelToothInterventions.removeInterventionItem(index);
+        if (interventionItem instanceof SideIntervention) {
+            SideIntervention si = (SideIntervention) interventionItem;
+            si.getToothSide().getSideInterventions().remove(si);
+        }
+        parent.refreshToothViews(new Date());
+        pnlNewInterventionItem.refreshView();
+    }//GEN-LAST:event_btnRemoveInterventionItemActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInterventionitem;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnRemoveInterventionItem;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel lblInterventionItemNote;
+    private javax.swing.JLabel lblInterventionNote;
     private javax.swing.JLabel lblRootMenuItem;
     private javax.swing.JLabel lblSideMenuItem;
     private javax.swing.JLabel lblToothMenuItem;
     private javax.swing.JPanel pnlDynamicContent;
     private javax.swing.JPanel pnlNewInterventionMenu;
+    private javax.swing.JButton pnlSaveIntervention;
     private javax.swing.JTable tblInterventionItems;
     private javax.swing.JTextArea txtItemNote;
     // End of variables declaration//GEN-END:variables
-
-    public void setDynamicContent(JPanel panel) {
-        pnlDynamicContent.add(panel);
-    }
 
     private void adjustPanel() {
         pnlDynamicContent.setLayout(new GridLayout(1, 1));
@@ -280,6 +331,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         pnlNewInterventionMenu.setBackground(ColorConstant.GREEN_STRONG);
         setBackground(ColorConstant.GREEN_STRONG);
         lblInterventionItemNote.setForeground(ColorConstant.LIGHT_COLOR);
+        lblInterventionNote.setForeground(ColorConstant.LIGHT_COLOR);
     }
 
     private void refreshDynamicContent() {
@@ -288,13 +340,8 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         pnlDynamicContent.revalidate();
     }
 
-    private void prepareIntervention() {
-        intervention = new Intervention();
-        intervention.setDate(new Date());
-    }
-
     private void setStartView() {
-        pnlNewInterventionItem = new PanelNewSideIntervention(this.tooth);
+        pnlNewInterventionItem = new PanelNewSideIntervention(tooth);
         refreshDynamicContent();
     }
 
@@ -304,5 +351,30 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         for (int i = 0; i < tblInterventionItems.getColumnModel().getColumnCount(); i++) {
             tblInterventionItems.getColumnModel().getColumn(i).setPreferredWidth(Math.round(percentWidth[i] * tWidth));
         }
+    }
+
+    private void prepareTempFields() {
+        intervention = new Intervention();
+        intervention.setDate(new Date());
+        sideInterventions = new ArrayList<>();
+    }
+
+    //!!!
+    public HashMap<ToothSideLabel, ToothSideState> getCurrentStatesOfSides() {
+        HashMap<ToothSideLabel, ToothSideState> states = new HashMap<>();
+        tooth.getSides().forEach((side) -> {
+            states.put(side.getLabel(), side.getSideInterventions().stream().max((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate())).get().getState());
+        });
+        return states;
+    }
+
+    //!!!
+    public ToothSide getToothSide(int indexOf) {
+        return tooth.getSides().get(indexOf);
+    }
+
+    public void setNewTooth(Tooth selectedTooth) {
+        tooth = selectedTooth;
+        pnlNewInterventionItem.refreshView();
     }
 }

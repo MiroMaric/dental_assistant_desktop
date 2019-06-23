@@ -262,7 +262,7 @@ public class PanelPatientProfile extends javax.swing.JPanel {
         lblFirstname.setText(patient.getFirstname());
         lblLastname.setText(patient.getLastname());
         lblEmail.setText(patient.getEmail());
-        lblBirthDate.setText(new SimpleDateFormat("dd.MM.yyyy").format(patient.getBirthDate()));
+        lblBirthDate.setText(patient.getBirthDate()==null?"":new SimpleDateFormat("dd.MM.yyyy").format(patient.getBirthDate()));
         lblAddress.setText(patient.getAddress());
         lblPhone.setText(patient.getPhone());
         lblCardboardDate.setText(new SimpleDateFormat("dd.MM.yyyy").format(patient.getCardboardDate()));
