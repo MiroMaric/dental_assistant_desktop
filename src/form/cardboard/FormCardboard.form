@@ -123,7 +123,7 @@
                       </Group>
                   </Group>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="pnlRootStateLegend" pref="100" max="32767" attributes="0"/>
+                      <Component id="pnlRootStateLegend" max="32767" attributes="0"/>
                       <Component id="pnlSideStateLegend" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
@@ -136,9 +136,9 @@
                   <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="pnlToothRoots" min="-2" max="-2" attributes="0"/>
-                      <Component id="pnlRootStateLegend" pref="272" max="32767" attributes="0"/>
+                      <Component id="pnlRootStateLegend" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="33" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="pnlToothSides" pref="150" max="32767" attributes="0"/>
                       <Component id="pnlSideStateLegend" min="-2" max="-2" attributes="0"/>
@@ -230,7 +230,7 @@
         <Container class="javax.swing.JPanel" name="pnlRootStateLegend">
           <Properties>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[80, 0]"/>
+              <Dimension value="[100, 150]"/>
             </Property>
           </Properties>
 
@@ -242,7 +242,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="150" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

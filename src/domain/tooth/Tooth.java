@@ -21,17 +21,20 @@ public class Tooth implements GeneralDObject {
     private ToothLabel label;
     private ToothState state;
     private List<ToothSide> sides;
+    private List<ToothRoot> roots;
 
     public Tooth() {
     }
 
-    public Tooth(Patient patient, ToothLabel label, ToothState state, List<ToothSide> sides) {
+    public Tooth(String toothID, Patient patient, ToothLabel label, ToothState state, List<ToothSide> sides, List<ToothRoot> roots) {
+        this.toothID = toothID;
         this.patient = patient;
         this.label = label;
         this.state = state;
         this.sides = sides;
+        this.roots = roots;
     }
-
+    
     public Tooth(Patient patient, ToothLabel label, ToothState state) {
         this.toothID = UUID.randomUUID().toString();
         this.patient = patient;
@@ -40,11 +43,11 @@ public class Tooth implements GeneralDObject {
         this.sides = new LinkedList<>();
     }
 
-    public Tooth(ToothLabel label, ToothState state, List<ToothSide> sides) {
-        this.label = label;
-        this.state = state;
-        this.sides = sides;
-    }
+//    public Tooth(ToothLabel label, ToothState state, List<ToothSide> sides) {
+//        this.label = label;
+//        this.state = state;
+//        this.sides = sides;
+//    }
 
     public Tooth(ToothLabel label, ToothState state) {
         this.label = label;
@@ -88,6 +91,14 @@ public class Tooth implements GeneralDObject {
         this.sides = sides;
     }
 
+    public List<ToothRoot> getRoots() {
+        return roots;
+    }
+
+    public void setRoots(List<ToothRoot> roots) {
+        this.roots = roots;
+    }
+
     public Patient getPatient() {
         return patient;
     }
@@ -107,9 +118,10 @@ public class Tooth implements GeneralDObject {
     public List<InterventionItem> getAllInterventions() {
         List<InterventionItem> interventions = new LinkedList<>();
         sides.forEach(side -> {
-            side.getSideInterventions().forEach(i -> {
-                interventions.add(i);
-            });
+            interventions.addAll(side.getSideInterventions());
+        });
+        roots.forEach(root->{
+            interventions.addAll(root.getRootInterventions());
         });
         return interventions;
     }

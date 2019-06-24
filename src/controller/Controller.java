@@ -7,8 +7,11 @@ import domain.tooth.ToothLabel;
 import domain.User;
 import domain.intervention.Intervention;
 import domain.intervention.InterventionItem;
+import domain.intervention.RootIntervention;
 import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
+import domain.tooth.ToothRoot;
+import domain.tooth.ToothRootLabel;
 import domain.tooth.ToothRootState;
 import domain.tooth.ToothSide;
 import domain.tooth.ToothSideLabel;
@@ -71,9 +74,14 @@ public class Controller {
             brokerDatabase.insertRecord(intervention);
             brokerDatabase.insertRecord(patient);
             List<ToothLabel> toothLabels = brokerDatabase.getAllRecord(new ToothLabel()).stream().map(o -> (ToothLabel) o).collect(Collectors.toList());
+            //i za ovo bi bilo logicno napraviti novu stavku intervencije kao "pocetno stanje"
             ToothState toothState = (ToothState) brokerDatabase.findRecord(new ToothState(null, "prirodan", null, null));
+            
             List<ToothSideLabel> toothSideLabels = brokerDatabase.getAllRecord(new ToothSideLabel()).stream().map(o -> (ToothSideLabel) o).collect(Collectors.toList());
             ToothSideState toothSideState = (ToothSideState) brokerDatabase.findRecord(new ToothSideState(-1, "zdrava", null, -1));
+            
+            List<ToothRootLabel> toothRootLabels = brokerDatabase.getAllRecord(new ToothRootLabel()).stream().map(o -> (ToothRootLabel) o).collect(Collectors.toList());
+            ToothRootState toothRootState = (ToothRootState) brokerDatabase.findRecord(new ToothRootState(-1, "zdrav", null, -1));
             for (ToothLabel tl : toothLabels) {
                 Tooth tooth = new Tooth(patient, tl, toothState);
                 brokerDatabase.insertRecord(tooth);
@@ -82,8 +90,24 @@ public class Controller {
                     SideIntervention sideIntevention = new SideIntervention(intervention, "Pocetno stanje", toothSide, toothSideState);
                     brokerDatabase.insertRecord(toothSide);
                     brokerDatabase.insertRecord(new InterventionItem(sideIntevention.getItemID(), sideIntevention.getIntervention(), sideIntevention.getNote()) {
+                        @Override
+                        public String getToothLabel() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
                     });
                     brokerDatabase.insertRecord(sideIntevention);
+                }
+                for(ToothRootLabel trl:toothRootLabels.subList(0, tooth.getLabel().getNumOfRoots())){
+                    ToothRoot toothRoot = new ToothRoot(tooth, trl);
+                    RootIntervention rootIntervention = new RootIntervention(intervention, "Pocetno stanje", toothRoot, toothRootState);
+                    brokerDatabase.insertRecord(toothRoot);
+                    brokerDatabase.insertRecord(new InterventionItem(rootIntervention.getItemID(), rootIntervention.getIntervention(), rootIntervention.getNote()) {
+                        @Override
+                        public String getToothLabel() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+                    });
+                    brokerDatabase.insertRecord(rootIntervention);
                 }
             }
             DatabaseConnection.getInstance().getConnection().commit();
@@ -126,6 +150,7 @@ public class Controller {
                 t.setLabel((ToothLabel) brokerDatabase.findRecord(t.getLabel()));
                 t.setState((ToothState) brokerDatabase.findRecord(t.getState()));
                 t.setPatient(p);
+                
                 List<ToothSide> toothSides = brokerDatabase.findRecords(new ToothSide(), t).stream().map(o -> (ToothSide) o).collect(Collectors.toList());
                 for (ToothSide ts : toothSides) {
                     ts.setLabel((ToothSideLabel) brokerDatabase.findRecord(ts.getLabel()));
@@ -135,6 +160,10 @@ public class Controller {
                         si.setToothSide(ts);
                         si.setState((ToothSideState) brokerDatabase.findRecord(new ToothSideState(si.getState().getToothSideStateID())));
                         String note = ((InterventionItem) brokerDatabase.findRecord(new InterventionItem(si.getItemID()) {
+                            @Override
+                            public String getToothLabel() {
+                                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                            }
                         })).getNote();
                         si.setNote(note);
                         si.setIntervention((Intervention) brokerDatabase.findRecord(si.getIntervention()));
@@ -144,6 +173,29 @@ public class Controller {
                 }
                 toothSides.sort((s1, s2) -> s1.getLabel().getToothSideLabelID().compareTo(s2.getLabel().getToothSideLabelID()));
                 t.setSides(toothSides);
+                
+                List<ToothRoot> toothRoots = brokerDatabase.findRecords(new ToothRoot(), t).stream().map(o -> (ToothRoot) o).collect(Collectors.toList());
+                for (ToothRoot tr : toothRoots) {
+                    tr.setLabel((ToothRootLabel) brokerDatabase.findRecord(tr.getLabel()));
+                    List<RootIntervention> rootInterventions = brokerDatabase.findRecords(new RootIntervention(), tr).stream().map(o -> (RootIntervention) o).collect(Collectors.toList());
+                    System.out.println(rootInterventions.get(0).getItemID());
+                    for (RootIntervention ri : rootInterventions) {
+                        ri.setToothRoot(tr);
+                        ri.setToothRootState((ToothRootState) brokerDatabase.findRecord(new ToothRootState(ri.getToothRootState().getToothRootStateID())));
+                        String note = ((InterventionItem) brokerDatabase.findRecord(new InterventionItem(ri.getItemID()) {
+                            @Override
+                            public String getToothLabel() {
+                                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                            }
+                        })).getNote();
+                        ri.setNote(note);
+                        ri.setIntervention((Intervention) brokerDatabase.findRecord(ri.getIntervention()));
+                    }
+                    rootInterventions.sort((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate()));
+                    tr.setRootInterventions(rootInterventions);
+                }
+                toothRoots.sort((s1, s2) -> s1.getLabel().getToothRootLabelID().compareTo(s2.getLabel().getToothRootLabelID()));
+                t.setRoots(toothRoots);
             }
             teeth.sort((Tooth o1, Tooth o2) -> o1.getLabel().getToothLabelID().compareTo(o2.getLabel().getToothLabelID()));
             p.setTeeth(teeth);

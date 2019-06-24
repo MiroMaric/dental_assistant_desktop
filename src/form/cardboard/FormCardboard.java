@@ -41,7 +41,7 @@ public class FormCardboard extends javax.swing.JFrame {
 
     public FormCardboard(Patient patient) {
         //this.patient = patient;
-        this.patient = controller.Controller.getInstance().getPatient(new Patient("2bc00871-2bf0-4809-baf3-209e4de17dd4"));
+        this.patient = controller.Controller.getInstance().getPatient(new Patient("55f9785c-ee63-4c9b-af65-775b17e2f65a"));
         pnlJaw = new PanelJaw();
         initComponents();
         adjustForm();
@@ -170,7 +170,7 @@ public class FormCardboard extends javax.swing.JFrame {
         ));
         scrollPaneToothInterventions.setViewportView(tblToothInterventions);
 
-        pnlRootStateLegend.setPreferredSize(new java.awt.Dimension(80, 0));
+        pnlRootStateLegend.setPreferredSize(new java.awt.Dimension(100, 150));
 
         javax.swing.GroupLayout pnlRootStateLegendLayout = new javax.swing.GroupLayout(pnlRootStateLegend);
         pnlRootStateLegend.setLayout(pnlRootStateLegendLayout);
@@ -180,7 +180,7 @@ public class FormCardboard extends javax.swing.JFrame {
         );
         pnlRootStateLegendLayout.setVerticalGroup(
             pnlRootStateLegendLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 150, Short.MAX_VALUE)
         );
 
         pnlSideStateLegend.setPreferredSize(new java.awt.Dimension(100, 150));
@@ -214,7 +214,7 @@ public class FormCardboard extends javax.swing.JFrame {
                         .addComponent(pnlToothRoots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)))
                 .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlRootStateLegend, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                    .addComponent(pnlRootStateLegend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlSideStateLegend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(92, 92, 92))
         );
@@ -224,8 +224,8 @@ public class FormCardboard extends javax.swing.JFrame {
                 .addGap(13, 13, 13)
                 .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlToothRoots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlRootStateLegend, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(pnlRootStateLegend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlToothSides, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                     .addComponent(pnlSideStateLegend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -307,10 +307,6 @@ public class FormCardboard extends javax.swing.JFrame {
         JLabel[] labels = new JLabel[32];
         for (int i = 0; i <= 31; i++) {
             JLabel lbl = new JLabel();
-            lbl.setForeground(Color.black);
-            lbl.setHorizontalAlignment(JLabel.CENTER);
-            lbl.setName(i + "");
-            lbl.setFont(new Font("serif", Font.PLAIN, 30));
             addListenerToTooth(lbl);
             labels[i] = lbl;
             pnlJaw.add(lbl);
@@ -351,6 +347,10 @@ public class FormCardboard extends javax.swing.JFrame {
         pnlJaw.getComponents()[8].setBounds(400 - x, 15, 50, 40);
 
         for (int i = 0; i < patient.getTeeth().size(); i++) {
+            labels[i].setForeground(Color.YELLOW);
+            labels[i].setHorizontalAlignment(JLabel.CENTER);
+            labels[i].setName(i + "");
+            labels[i].setFont(new Font("serif", Font.PLAIN, 30));
             switch (patient.getTeeth().get(i).getState().getName()) {
                 case "odstranjen":
                     labels[i].setText("X");

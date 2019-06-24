@@ -220,6 +220,13 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
         pnlView.add(toothView);
         pnlView.revalidate();
     }
+    
+    
+    @Override
+    public void setNewTooth(Tooth tooth) {
+        this.tooth = tooth;
+        refreshView();
+    }
 
     private void setTextToLblSideLabels() {
         //Kasnije

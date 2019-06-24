@@ -30,6 +30,8 @@ public abstract class InterventionItem implements GeneralDObject {
         this.note = note;
     }
 
+    public abstract String getToothLabel();
+
     public String getItemID() {
         return itemID;
     }
@@ -98,7 +100,10 @@ public abstract class InterventionItem implements GeneralDObject {
         String itemID1 = rs.getString("itemID");
         String note1 = rs.getString("note");
         return new InterventionItem(itemID, new Intervention(interventionID1), note1) {
+            @Override
+            public String getToothLabel() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
         };
     }
-
 }

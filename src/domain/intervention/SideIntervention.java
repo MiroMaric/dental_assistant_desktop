@@ -5,10 +5,8 @@ import domain.tooth.ToothSide;
 import domain.tooth.ToothSideState;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
-
-public class SideIntervention extends InterventionItem{
+public class SideIntervention extends InterventionItem {
 
     private ToothSide toothSide;
     private ToothSideState state;
@@ -18,25 +16,31 @@ public class SideIntervention extends InterventionItem{
         this.toothSide = toothSide;
         this.state = state;
     }
-    
-    public SideIntervention(String itemID,ToothSideState state) {
+
+    public SideIntervention(String itemID, ToothSideState state) {
         super(itemID);
         this.state = state;
     }
-    public SideIntervention(String itemID,ToothSideState state,Intervention intervention) {
-        this(itemID,state);
+
+    public SideIntervention(String itemID, ToothSideState state, Intervention intervention) {
+        this(itemID, state);
         this.intervention = intervention;
     }
-    
-    public SideIntervention(ToothSideState state) {
-        this.state = state;
-        intervention = new Intervention(new Date(), null, null);
-    }
+
+//    public SideIntervention(ToothSideState state) {
+//        this.state = state;
+//        intervention = new Intervention(new Date(), null, null);
+//    }
 
     public SideIntervention() {
-        
+
     }
-    
+
+    @Override
+    public String getToothLabel() {
+        return toothSide.getTooth().getLabel().toString();
+    }
+
     public ToothSide getToothSide() {
         return toothSide;
     }
@@ -62,7 +66,7 @@ public class SideIntervention extends InterventionItem{
     public String getItemLabel() {
         return toothSide.getLabel().getName();
     }
-    
+
     @Override
     public String getClassName() {
         return "side_intervention";
@@ -103,6 +107,7 @@ public class SideIntervention extends InterventionItem{
         String toothID1 = rs.getString("toothID");
         String patientID1 = rs.getString("patientID");
         int toothSideStateID1 = rs.getInt("toothSideStateID");
-        return new SideIntervention(itemID1,new ToothSideState(toothSideStateID1),new Intervention(interventionID1));
+        return new SideIntervention(itemID1, new ToothSideState(toothSideStateID1), new Intervention(interventionID1));
     }
+
 }

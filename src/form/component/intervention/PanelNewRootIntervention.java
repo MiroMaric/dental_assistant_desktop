@@ -2,6 +2,7 @@ package form.component.intervention;
 
 import domain.intervention.InterventionItem;
 import domain.tooth.Tooth;
+import form.ColorConstant;
 
 
 public class PanelNewRootIntervention extends PanelNewInterventionItem{
@@ -9,6 +10,8 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem{
     public PanelNewRootIntervention(Tooth tooth) {
         super(tooth);
         initComponents();
+        
+        paintPanel();
     }
 
 
@@ -36,6 +39,15 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem{
     @Override
     public void refreshView() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setNewTooth(Tooth tooth) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void paintPanel() {
+        setBackground(ColorConstant.GREEN_STRONG);
     }
 
 

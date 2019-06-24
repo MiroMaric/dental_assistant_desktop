@@ -1,29 +1,40 @@
 package domain.tooth;
 
 import domain.GeneralDObject;
+import domain.Patient;
+import domain.intervention.RootIntervention;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
+public class ToothRoot implements GeneralDObject {
 
-public class ToothRoot implements GeneralDObject{
     private String toothRootID;
-    private String toothID;
-    private String patientID;
+    private Tooth tooth;
     private ToothRootLabel label;
-    private ToothRootState state;
-    private List<ToothRootStateHistory> stateHistory;
+    private List<RootIntervention> rootInterventions;
 
     public ToothRoot() {
     }
 
-    public ToothRoot(String toothRootID, String toothID, String patientID, ToothRootLabel label, ToothRootState state, List<ToothRootStateHistory> stateHistory) {
+    public ToothRoot(String toothRootID, Tooth tooth, ToothRootLabel label, List<RootIntervention> rootInterventions) {
         this.toothRootID = toothRootID;
-        this.toothID = toothID;
-        this.patientID = patientID;
+        this.tooth = tooth;
         this.label = label;
-        this.state = state;
-        this.stateHistory = stateHistory;
+        this.rootInterventions = rootInterventions;
+    }
+
+    public ToothRoot(Tooth tooth, ToothRootLabel label) {
+        toothRootID = UUID.randomUUID().toString();
+        this.tooth = tooth;
+        this.label = label;
+    }
+
+    private ToothRoot(String toothRootID, Tooth tooth, ToothRootLabel toothRootLabel) {
+        this.toothRootID = toothRootID;
+        this.tooth = tooth;
+        this.label = toothRootLabel;
     }
 
     public String getToothRootID() {
@@ -34,20 +45,12 @@ public class ToothRoot implements GeneralDObject{
         this.toothRootID = toothRootID;
     }
 
-    public String getToothID() {
-        return toothID;
+    public Tooth getTooth() {
+        return tooth;
     }
 
-    public void setToothID(String toothID) {
-        this.toothID = toothID;
-    }
-
-    public String getPatientID() {
-        return patientID;
-    }
-
-    public void setPatientID(String patientID) {
-        this.patientID = patientID;
+    public void setTooth(Tooth tooth) {
+        this.tooth = tooth;
     }
 
     public ToothRootLabel getLabel() {
@@ -58,20 +61,12 @@ public class ToothRoot implements GeneralDObject{
         this.label = label;
     }
 
-    public ToothRootState getState() {
-        return state;
+    public List<RootIntervention> getRootInterventions() {
+        return rootInterventions;
     }
 
-    public void setState(ToothRootState state) {
-        this.state = state;
-    }
-
-    public List<ToothRootStateHistory> getStateHistory() {
-        return stateHistory;
-    }
-
-    public void setStateHistory(List<ToothRootStateHistory> stateHistory) {
-        this.stateHistory = stateHistory;
+    public void setRootInterventions(List<RootIntervention> rootInterventions) {
+        this.rootInterventions = rootInterventions;
     }
 
     @Override
@@ -83,10 +78,10 @@ public class ToothRoot implements GeneralDObject{
     public String getAtrValue() {
         StringBuilder sb = new StringBuilder();
         sb.append("'").append(toothRootID).append("',")
-                .append("'").append(patientID).append("',")
-                .append("'").append(toothID).append("',")
-                .append("'").append(label.getToothRootLabelID()).append("',")
-                .append("'").append(state.getToothRootStateID()).append("'");
+                .append("'").append(tooth.getToothID()).append("',")
+                .append("'").append(tooth.getPatient().getPatientID()).append("',")
+                .append("'").append(label.getToothRootLabelID())
+                .append("'");
         return sb.toString();
     }
 
@@ -102,7 +97,7 @@ public class ToothRoot implements GeneralDObject{
 
     @Override
     public String getWhereCondition() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "toothRootID = "+"'"+toothRootID+"'";
     }
 
     @Override
@@ -110,10 +105,7 @@ public class ToothRoot implements GeneralDObject{
         String toothRootID1 = rs.getString("toothRootID");
         String toothID1 = rs.getString("toothID");
         String patientID1 = rs.getString("patientID");
-        String toothRootLabelID1 = rs.getString("toothRootLabelID");
-        String toothRootStateID1= rs.getString("toothRootStateID");
-        return new ToothRoot(toothRootID1, toothID1, patientID1, new ToothRootLabel(toothRootLabelID1), new ToothRootState(toothRootStateID1),null);
+        String toothRootLabelID = rs.getString("toothRootLabelID");
+        return new ToothRoot(toothRootID1,new Tooth(toothID1,new Patient(patientID1)), new ToothRootLabel(toothRootLabelID));
     }
-    
-    
 }

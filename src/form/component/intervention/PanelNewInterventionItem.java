@@ -35,5 +35,7 @@ public abstract class PanelNewInterventionItem extends javax.swing.JPanel {
     
     public abstract InterventionItem getInterventionItem();
     public abstract void refreshView();
+
+    public abstract void setNewTooth(Tooth tooth);
     
 }

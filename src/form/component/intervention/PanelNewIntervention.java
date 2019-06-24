@@ -1,16 +1,11 @@
 package form.component.intervention;
 
-import domain.Patient;
 import domain.intervention.Intervention;
 import domain.intervention.InterventionItem;
 import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
-import domain.tooth.ToothSide;
-import domain.tooth.ToothSideLabel;
-import domain.tooth.ToothSideState;
 import form.ColorConstant;
 import form.MyTableCellRenderer;
-import form.TableModelToothInterventions;
 import form.cardboard.FormCardboard;
 import icon.ErrorIcon;
 import java.awt.GridLayout;
@@ -18,8 +13,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class PanelNewIntervention extends javax.swing.JPanel {
@@ -28,7 +23,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private Tooth tooth;
     private Intervention intervention;
     private PanelNewInterventionItem pnlNewInterventionItem;
-    private TableModelToothInterventions tableModelToothInterventions;
+    private TableModelToothInterventionItems tableModelToothInterventions;
     private List<SideIntervention> sideInterventions;
 
     public PanelNewIntervention(FormCardboard parent,Tooth tooth) {
@@ -39,6 +34,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         adjustPanel();
         prepareTblInterventionItem();
         paintPanel();
+        setMenuIcons();
         setStartView();
     }
 
@@ -113,9 +109,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblSideMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblSideMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblSideMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSideMenuItem.setText("Strana");
         lblSideMenuItem.setMaximumSize(new java.awt.Dimension(30, 15));
-        lblSideMenuItem.setOpaque(true);
         lblSideMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblSideMenuItemMousePressed(evt);
@@ -125,9 +119,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblRootMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblRootMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblRootMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblRootMenuItem.setText("Koren");
         lblRootMenuItem.setMaximumSize(new java.awt.Dimension(30, 15));
-        lblRootMenuItem.setOpaque(true);
         lblRootMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblRootMenuItemMousePressed(evt);
@@ -137,9 +129,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblToothMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblToothMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblToothMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblToothMenuItem.setText("Zub");
         lblToothMenuItem.setMaximumSize(new java.awt.Dimension(30, 15));
-        lblToothMenuItem.setOpaque(true);
         lblToothMenuItem.setPreferredSize(new java.awt.Dimension(30, 15));
         lblToothMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -273,9 +263,11 @@ public class PanelNewIntervention extends javax.swing.JPanel {
             SideIntervention sideIntervention = (SideIntervention) item;
             tooth.getSides().get(tooth.getSides().indexOf(sideIntervention.getToothSide())).getSideInterventions().add(sideIntervention);
             sideInterventions.add(sideIntervention);
+            sideIntervention.getToothSide().setTooth(tooth);
         }
         parent.refreshToothViews(new Date());
         pnlNewInterventionItem.refreshView();
+        txtItemNote.setText("");
     }//GEN-LAST:event_btnAddInterventionitemActionPerformed
 
     private void btnRemoveInterventionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInterventionItemActionPerformed
@@ -315,7 +307,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     }
 
     private void prepareTblInterventionItem() {
-        tableModelToothInterventions = new TableModelToothInterventions();
+        tableModelToothInterventions = new TableModelToothInterventionItems();
         tblInterventionItems.setModel(tableModelToothInterventions);
         tblInterventionItems.getTableHeader().setDefaultRenderer(new MyTableCellRenderer());
         tblInterventionItems.getTableHeader().setReorderingAllowed(false);
@@ -333,6 +325,13 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblInterventionItemNote.setForeground(ColorConstant.LIGHT_COLOR);
         lblInterventionNote.setForeground(ColorConstant.LIGHT_COLOR);
     }
+    
+    
+    private void setMenuIcons() {
+        lblRootMenuItem.setIcon(new ImageIcon("icons/intervention_item/toothRootInterventionItem.png"));
+        lblToothMenuItem.setIcon(new ImageIcon("icons/intervention_item/toothInterventionItem.png"));
+        lblSideMenuItem.setIcon(new ImageIcon("icons/intervention_item/toothSideInterventionItem.png"));
+    }
 
     private void refreshDynamicContent() {
         pnlDynamicContent.removeAll();
@@ -346,7 +345,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     }
 
     public void resizeTableColumns() {
-        int[] percentWidth = {15, 15, 55, 15};
+        int[] percentWidth = {15, 25, 15, 45};
         int tWidth = tblInterventionItems.getWidth();
         for (int i = 0; i < tblInterventionItems.getColumnModel().getColumnCount(); i++) {
             tblInterventionItems.getColumnModel().getColumn(i).setPreferredWidth(Math.round(percentWidth[i] * tWidth));
@@ -359,22 +358,9 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         sideInterventions = new ArrayList<>();
     }
 
-    //!!!
-    public HashMap<ToothSideLabel, ToothSideState> getCurrentStatesOfSides() {
-        HashMap<ToothSideLabel, ToothSideState> states = new HashMap<>();
-        tooth.getSides().forEach((side) -> {
-            states.put(side.getLabel(), side.getSideInterventions().stream().max((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate())).get().getState());
-        });
-        return states;
-    }
-
-    //!!!
-    public ToothSide getToothSide(int indexOf) {
-        return tooth.getSides().get(indexOf);
-    }
-
     public void setNewTooth(Tooth selectedTooth) {
         tooth = selectedTooth;
-        pnlNewInterventionItem.refreshView();
+        pnlNewInterventionItem.setNewTooth(tooth);
     }
+
 }

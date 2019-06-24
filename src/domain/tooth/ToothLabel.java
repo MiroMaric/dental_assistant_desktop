@@ -105,4 +105,9 @@ public class ToothLabel implements GeneralDObject {
         return "toothLabelID='"+toothLabelID+"'";
     }
 
+    @Override
+    public String toString() {
+        return number + "" + quadrant;
+    }
+
 }

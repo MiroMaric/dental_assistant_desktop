@@ -52,4 +52,9 @@ public class PanelNewToothIntervention extends PanelNewInterventionItem{
     public void refreshView() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void setNewTooth(Tooth tooth) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
