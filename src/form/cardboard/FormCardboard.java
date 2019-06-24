@@ -408,7 +408,7 @@ public class FormCardboard extends javax.swing.JFrame {
 
     public void refreshToothViews(Date date) {
         pnlToothRoots.removeAll();
-        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100));
+        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100,date));
         pnlToothRoots.revalidate();
         pnlToothSides.removeAll();
         pnlToothSides.add(new PanelToothSides(selectedTooth, date));
@@ -448,8 +448,8 @@ public class FormCardboard extends javax.swing.JFrame {
         selectedTooth = patient.getTeeth().get(0);
         ((JLabel) pnlJaw.getComponents()[0]).setBorder(new LineBorder(Color.yellow, 2));
         tableModelToothInterventions.setTooth(selectedTooth);
-        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100));
-        pnlToothSides.add(new PanelToothSides(selectedTooth, tableModelToothInterventions.getInterventionDate(0)));
+        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100,new Date()));
+        pnlToothSides.add(new PanelToothSides(selectedTooth, new Date()));
     }
 
     private void prepareMenu() {

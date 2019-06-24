@@ -17,7 +17,7 @@ public class TableModelToothInterventions extends AbstractTableModel{
     
     public TableModelToothInterventions(Tooth tooth) {
         this.tooth = tooth;
-        interventions = tooth.getAllInterventions();
+        interventions = tooth.getAllSortedInterventions();
         columns = new String[]{"Oznaka","Stanje","Opis","Datum"};
     }
 
@@ -32,7 +32,7 @@ public class TableModelToothInterventions extends AbstractTableModel{
     
     public void setTooth(Tooth tooth) {
         this.tooth = tooth;
-        interventions = tooth.getAllInterventions();
+        interventions = tooth.getAllSortedInterventions();
         fireTableDataChanged();
     }
   

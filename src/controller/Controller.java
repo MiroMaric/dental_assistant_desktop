@@ -17,6 +17,7 @@ import domain.tooth.ToothSide;
 import domain.tooth.ToothSideLabel;
 import domain.tooth.ToothSideState;
 import domain.tooth.ToothState;
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -129,6 +130,8 @@ public class Controller {
 //        for (Tooth t : patient.getTeeth()) {
 //            System.out.println(t.getSides().get(0).getSideInterventions().get(0).getState().getName());
 //        }
+
+        System.out.println(Color.GRAY.getRGB());
     }
 
     public List<Patient> getAllPatients() {

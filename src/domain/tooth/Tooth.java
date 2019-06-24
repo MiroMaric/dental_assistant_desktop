@@ -3,9 +3,11 @@ package domain.tooth;
 import domain.GeneralDObject;
 import domain.Patient;
 import domain.intervention.InterventionItem;
+import domain.intervention.RootIntervention;
 import domain.intervention.SideIntervention;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ public class Tooth implements GeneralDObject {
         this.sides = sides;
         this.roots = roots;
     }
-    
+
     public Tooth(Patient patient, ToothLabel label, ToothState state) {
         this.toothID = UUID.randomUUID().toString();
         this.patient = patient;
@@ -48,7 +50,6 @@ public class Tooth implements GeneralDObject {
 //        this.state = state;
 //        this.sides = sides;
 //    }
-
     public Tooth(ToothLabel label, ToothState state) {
         this.label = label;
         this.state = state;
@@ -115,14 +116,15 @@ public class Tooth implements GeneralDObject {
         this.toothID = toothID;
     }
 
-    public List<InterventionItem> getAllInterventions() {
-        List<InterventionItem> interventions = new LinkedList<>();
+    public List<InterventionItem> getAllSortedInterventions() {
+        List<InterventionItem> interventions = new ArrayList<>();
         sides.forEach(side -> {
             interventions.addAll(side.getSideInterventions());
         });
-        roots.forEach(root->{
+        roots.forEach(root -> {
             interventions.addAll(root.getRootInterventions());
         });
+        interventions.sort((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate()));
         return interventions;
     }
 
@@ -140,6 +142,14 @@ public class Tooth implements GeneralDObject {
         HashMap<ToothSideLabel, ToothSideState> states = new HashMap<>();
         sides.forEach((side) -> {
             states.put(side.getLabel(), side.getSideInterventions().stream().max((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate())).get().getState());
+        });
+        return states;
+    }
+    
+    public HashMap<ToothRootLabel, ToothRootState> getCurrentStatesOfRoots() {
+        HashMap<ToothRootLabel, ToothRootState> states = new HashMap<>();
+        roots.forEach((root) -> {
+            states.put(root.getLabel(), root.getRootInterventions().stream().max((o1, o2) -> o1.getIntervention().getDate().compareTo(o2.getIntervention().getDate())).get().getToothRootState());
         });
         return states;
     }
@@ -162,6 +172,28 @@ public class Tooth implements GeneralDObject {
             throw new RuntimeException("Logicka greska!");
         }
         return result.getState();
+    }
+
+    public ToothRootState getRootStateAtDate(int index, Date date) {
+//        RootIntervention result = null;
+//        Date tempDate = new GregorianCalendar(1, 0, 0).getTime();
+//        for (RootIntervention ri : roots.get(i).getRootInterventions()) {
+//            if (ri.getIntervention().getDate().getTime() <= date.getTime()
+//                    && tempDate.getTime() <= ri.getIntervention().getDate().getTime()) {
+//                result = ri;
+//                tempDate = ri.getIntervention().getDate();
+//            }
+//        }
+//        if (result == null) {
+//            throw new RuntimeException("Logicka greska!");
+//        }
+//        return result.getToothRootState();
+        List<RootIntervention> interventions = roots.get(index).getRootInterventions();
+        for(int i=interventions.size()-1;i>=0;i--){
+            if(interventions.get(i).getIntervention().getDate().getTime()<=date.getTime())
+                return interventions.get(i).getToothRootState();
+        }
+        return interventions.get(0).getToothRootState();
     }
 
     @Override

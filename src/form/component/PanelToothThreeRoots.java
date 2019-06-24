@@ -4,21 +4,20 @@ package form.component;
 import domain.tooth.Tooth;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Date;
 
 public class PanelToothThreeRoots extends PanelTooth{
     Color c1, c2, c3,c4,c5;
-    int x, y;
     
     //c1-gledj;c2-?;c3-1.koren;c4-2.koren
-    public PanelToothThreeRoots(int x, Tooth tooth) {
+    public PanelToothThreeRoots(int x, Tooth tooth,Date date) {
+        super(x,tooth,date);
         this.c1 = Color.WHITE;
         this.c2 = Color.PINK;
         this.c3 = Color.GRAY;
         this.c4 = Color.GRAY;
         this.c5 = Color.GRAY;
-        this.x = x;
         this.y = (int)Math.round(x*2.1);
-        this.tooth = tooth;
     }
 
     //100x210
@@ -84,5 +83,9 @@ public class PanelToothThreeRoots extends PanelTooth{
         g2d.fillPolygon(xpoints5, ypoints5, npoints5);
         g2d.setPaint(c1);
         g2d.fillPolygon(xpoints1, ypoints1, npoints1);
+    }
+
+    protected void initializeStates() {
+        
     }
 }

@@ -35,11 +35,11 @@ public class PanelTeeth extends javax.swing.JPanel {
         gbc.ipady = 140;
         for (int i = 7; i >= 0; i--) {
             gbc.gridx = 7 - i;
-            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60), gbc);
+            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60,new Date()), gbc);
         }
         for (int i = 8; i < 16; i++) {
             gbc.gridx = i;
-            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60), gbc);
+            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60,new Date()), gbc);
         }
         gbc.gridy = 1;
         gbc.ipady = 60;
@@ -66,11 +66,11 @@ public class PanelTeeth extends javax.swing.JPanel {
         gbc.ipady = 140;
         for (int i = 31; i >= 24; i--) {
             gbc.gridx = 31 - i;
-            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60), gbc);
+            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60,new Date()), gbc);
         }
         for (int i = 16; i < 24; i++) {
             gbc.gridx = i - 8;
-            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60), gbc);
+            add(PanelTooth.getToothRootsPanel(patient.getTeeth().get(i), 60,new Date()), gbc);
         }
         revalidate();
         repaint();

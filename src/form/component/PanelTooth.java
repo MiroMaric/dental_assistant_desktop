@@ -1,33 +1,61 @@
 package form.component;
 
 import domain.tooth.Tooth;
+import domain.tooth.ToothRootLabel;
+import domain.tooth.ToothRootState;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Date;
+import java.util.HashMap;
 import javax.swing.JPanel;
 
 public abstract class PanelTooth extends JPanel {
 
     protected Tooth tooth;
-
-    public PanelTooth() {
+    protected Date date;
+    protected int x,y;
+    public PanelTooth(int x,Tooth tooth,Date date) {
+        this.tooth = tooth;
+        this.date = date;
+        this.x = x;
         adjustPanel();
     }
     
-    public static PanelTooth getToothRootsPanel(Tooth tooth,int x) {
+    public static PanelTooth getToothRootsPanel(Tooth tooth,int x,Date date) {
         PanelTooth panelToothRoots = null;
         switch (tooth.getLabel().getNumOfRoots()) {
             case 1: {
-                panelToothRoots = new PanelToothOneRoots(x, tooth);
+                panelToothRoots = new PanelToothOneRoots(x, tooth,date);
                 break;
             }
             case 2: {
-                panelToothRoots = new PanelToothTwoRoots(x, tooth);
+                panelToothRoots = new PanelToothTwoRoots(x, tooth,date);
                 break;
             }
             case 3: {
                 //panelToothRoots = new PanelToothThreeRoots(x, tooth);
-                panelToothRoots = new PanelToothTwoRoots(x, tooth);
+                panelToothRoots = new PanelToothTwoRoots(x, tooth,date);
+                break;
+            }
+        }
+        return panelToothRoots;
+    }
+    
+    public static PanelTooth getToothRootsPanel(Tooth tooth,HashMap<ToothRootLabel,ToothRootState> currentStatesOfSides,int x) {
+        PanelTooth panelToothRoots = null;
+        switch (tooth.getLabel().getNumOfRoots()) {
+            case 1: {
+                panelToothRoots = new PanelToothOneRoots(x,tooth,currentStatesOfSides);
+                break;
+            }
+            case 2: {
+                panelToothRoots = new PanelToothTwoRoots(x,tooth,currentStatesOfSides);
+                break;
+            }
+            case 3: {
+                //panelToothRoots = new PanelToothThreeRoots(x,tooth,currentStatesOfSides);
+                panelToothRoots = new PanelToothTwoRoots(x,tooth,currentStatesOfSides);
                 break;
             }
         }
@@ -51,5 +79,4 @@ public abstract class PanelTooth extends JPanel {
     private void adjustPanel() {
         setOpaque(false);
     }
-
 }

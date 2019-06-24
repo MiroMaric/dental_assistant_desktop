@@ -1,25 +1,36 @@
 package form.component;
 
 import domain.tooth.Tooth;
+import domain.tooth.ToothRootLabel;
+import domain.tooth.ToothRootState;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Date;
+import java.util.HashMap;
 
 
 public class PanelToothTwoRoots extends PanelTooth{
 
     
-    Color c1, c2, c3,c4;
-    int x, y;
-    
+    private final Color c1, c2;
+    private ToothRootState firstRootState;
+    private ToothRootState secondRootState;
     //c1-gledj;c2-?;c3-1.koren;c4-2.koren  
-    public PanelToothTwoRoots(int x, Tooth tooth) {
+    public PanelToothTwoRoots(int x, Tooth tooth,Date date) {
+        super(x,tooth,date);
+        initializeStates();
         this.c1 = Color.WHITE;
         this.c2 = Color.PINK;
-        this.c3 = Color.GRAY;
-        this.c4 = Color.GRAY;
-        this.x = x;
         this.y = (int)Math.round(x*1.75);
-        this.tooth = tooth;
+    }
+
+    public PanelToothTwoRoots(int x,Tooth tooth,HashMap<ToothRootLabel, ToothRootState> currentStatesOfRoots) {
+        super(x,tooth,null);
+        initializeStates(currentStatesOfRoots);
+        this.c1 = Color.WHITE;
+        this.c2 = Color.PINK;
+        this.y = (int)Math.round(x*1.75);
+        
     }
     //100x175
     @Override
@@ -68,12 +79,33 @@ public class PanelToothTwoRoots extends PanelTooth{
         
         g2d.setPaint(c2);
         g2d.fillPolygon(xpoints2, ypoints2, npoints2);
-        g2d.setPaint(c3);
+        g2d.setPaint(new Color(firstRootState.getColor()));
         g2d.fillPolygon(xpoints3, ypoints3, npoints3);
-        g2d.setPaint(c4);
+        g2d.setPaint(new Color(secondRootState.getColor()));
         g2d.fillPolygon(xpoints4, ypoints4, npoints4);
         g2d.setPaint(c1);
         g2d.fillPolygon(xpoints1, ypoints1, npoints1);
+    }
+
+    private void initializeStates() {
+        firstRootState = tooth.getRootStateAtDate(0,date);
+        secondRootState = tooth.getRootStateAtDate(1,date);
+    }
+
+    private void initializeStates(HashMap<ToothRootLabel, ToothRootState> currentStatesOfRoots) {
+        currentStatesOfRoots.keySet().forEach((rootLabel) -> {
+            System.out.println("------>" + rootLabel.getName().toLowerCase());
+            switch(rootLabel.getName().toLowerCase()){
+                case "koren1":
+                    firstRootState = currentStatesOfRoots.get(rootLabel);
+                    break;
+                case "koren2":
+                    secondRootState = currentStatesOfRoots.get(rootLabel);
+                    break;
+                default:
+                    throw new RuntimeException("Logicka greska!");
+            }
+        });
     }
     
 }

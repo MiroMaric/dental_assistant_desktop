@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import javax.swing.JPanel;
 
 public class PanelToothSides extends JPanel {
@@ -46,12 +45,6 @@ public class PanelToothSides extends JPanel {
         this.r = r;
     }
 
-//    public PanelToothSides(List<ToothSideState> currentStatesOfSides, int r) {
-//        initialStates(currentStatesOfSides);
-//        initComponents();
-//        preparePanel();
-//        this.r = r;
-//    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
