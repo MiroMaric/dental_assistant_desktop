@@ -3,6 +3,7 @@ package form.component.intervention;
 import controller.Controller;
 import domain.intervention.InterventionItem;
 import domain.intervention.RootIntervention;
+import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
 import domain.tooth.ToothRoot;
 import domain.tooth.ToothRootLabel;
@@ -14,7 +15,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -141,7 +144,12 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem {
 
     @Override
     public InterventionItem getInterventionItem() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (rootIntervention.getToothRootState() == null || rootIntervention.getToothRoot() == null) {
+            return null;
+        }
+        RootIntervention pom = rootIntervention;
+        setTheInitialState();
+        return pom;
     }
 
     @Override
@@ -191,13 +199,16 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem {
             addMouseClickedListenerToBtnRootLabel(btn);
         });
         if (btnGroupRootLabels.getButtonCount() == 1) {
-            btnGroupRootLabels.setSelected(btnGroupRootLabels.getElements().nextElement().getModel(), true);
+            AbstractButton btn = btnGroupRootLabels.getElements().nextElement();
+            btnGroupRootLabels.setSelected(btn.getModel(), true);
+            rootIntervention.setToothRoot(hashMapToothRoots.get(btn.getText()));
         }
         pnlBtnGroupRootLabels.repaint();
     }
 
     private void populatePnlBtnGroupRootStates() {
         List<ToothRootState> rootStates = Controller.getInstance().getToothRootStates();
+        hashMapToothRootStates.clear();
         rootStates.forEach((state) -> {
             JRadioButton btn = new JRadioButton(state.getName());
             btn.setForeground(ColorConstant.LIGHT_COLOR);
@@ -242,6 +253,7 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem {
     }
 
     private void setTheInitialState() {
+        rootIntervention = new RootIntervention();
         btnGroupRootStates.clearSelection();
         refreshView();
     }

@@ -14,9 +14,10 @@ public class Intervention implements GeneralDObject{
     private Date date;
     private String note;
     private List<InterventionItem> items;
-    User user;
+    private User user;
 
     public Intervention() {
+        interventionID = UUID.randomUUID().toString();
     }
     
     public Intervention(String interventionID) {
@@ -30,7 +31,7 @@ public class Intervention implements GeneralDObject{
         this.user = user;
     }
     public Intervention(Date date, String note,User user) {
-        interventionID = UUID.randomUUID().toString();
+        this();
         this.date = date;
         this.note = note;
         this.user = user;
@@ -66,6 +67,14 @@ public class Intervention implements GeneralDObject{
 
     public void setItems(List<InterventionItem> items) {
         this.items = items;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override

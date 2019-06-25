@@ -155,6 +155,8 @@ public class Tooth implements GeneralDObject {
     }
 
     public ToothSide getToothSide(int indexOf) {
+        System.out.println(label.toString());
+        System.out.println(sides.get(indexOf).getTooth().getLabel().toString());
         return sides.get(indexOf);
     }
 

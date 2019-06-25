@@ -12,6 +12,7 @@ public abstract class InterventionItem implements GeneralDObject {
     protected String note;
 
     public InterventionItem() {
+        this.itemID = UUID.randomUUID().toString();
     }
 
     public InterventionItem(String itemID) {
@@ -19,7 +20,7 @@ public abstract class InterventionItem implements GeneralDObject {
     }
 
     public InterventionItem(Intervention intervention, String note) {
-        this.itemID = UUID.randomUUID().toString();
+        this();
         this.intervention = intervention;
         this.note = note;
     }

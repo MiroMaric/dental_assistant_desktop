@@ -2,6 +2,7 @@ package form.cardboard;
 
 import controller.Controller;
 import domain.Patient;
+import domain.User;
 import domain.tooth.Tooth;
 import form.ColorConstant;
 import form.MyTableCellRenderer;
@@ -28,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import session.Session;
 
 public class FormCardboard extends javax.swing.JFrame {
 
@@ -42,6 +44,7 @@ public class FormCardboard extends javax.swing.JFrame {
     public FormCardboard(Patient patient) {
         //this.patient = patient;
         this.patient = controller.Controller.getInstance().getPatient(new Patient("55f9785c-ee63-4c9b-af65-775b17e2f65a"));
+        Session.getInstance().setUser(new User("miko"));
         pnlJaw = new PanelJaw();
         initComponents();
         adjustForm();

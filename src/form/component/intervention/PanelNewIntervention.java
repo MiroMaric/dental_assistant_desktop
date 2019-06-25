@@ -1,7 +1,9 @@
 package form.component.intervention;
 
+import controller.Controller;
 import domain.intervention.Intervention;
 import domain.intervention.InterventionItem;
+import domain.intervention.RootIntervention;
 import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
 import form.ColorConstant;
@@ -16,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import session.Session;
 
 public class PanelNewIntervention extends javax.swing.JPanel {
 
@@ -24,7 +27,8 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private Intervention intervention;
     private PanelNewInterventionItem pnlNewInterventionItem;
     private TableModelToothInterventionItems tableModelToothInterventions;
-    private List<SideIntervention> sideInterventions;
+//    private List<SideIntervention> sideInterventions;
+//    private List<RootIntervention> rootInterventions;
 
     public PanelNewIntervention(FormCardboard parent,Tooth tooth) {
         this.parent = parent;
@@ -50,7 +54,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblInterventionItems = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txtInterventionNote = new javax.swing.JTextArea();
         pnlSaveIntervention = new javax.swing.JButton();
         pnlNewInterventionMenu = new javax.swing.JPanel();
         lblSideMenuItem = new javax.swing.JLabel();
@@ -100,11 +104,16 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(tblInterventionItems);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        txtInterventionNote.setColumns(20);
+        txtInterventionNote.setRows(5);
+        jScrollPane3.setViewportView(txtInterventionNote);
 
         pnlSaveIntervention.setText("Sacuvaj");
+        pnlSaveIntervention.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pnlSaveInterventionMouseClicked(evt);
+            }
+        });
 
         lblSideMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblSideMenuItem.setForeground(new java.awt.Color(255, 255, 255));
@@ -261,10 +270,14 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         tableModelToothInterventions.addInterventionItem(item);
         if (item instanceof SideIntervention) {
             SideIntervention sideIntervention = (SideIntervention) item;
-            tooth.getSides().get(tooth.getSides().indexOf(sideIntervention.getToothSide())).getSideInterventions().add(sideIntervention);
-            sideInterventions.add(sideIntervention);
-            sideIntervention.getToothSide().setTooth(tooth);
+            sideIntervention.getToothSide().getSideInterventions().add(sideIntervention);
+            //sideInterventions.add(sideIntervention);
+        }else if(item instanceof RootIntervention){
+            RootIntervention rootIntervention = (RootIntervention) item;
+            rootIntervention.getToothRoot().getRootInterventions().add(rootIntervention);
+            //rootInterventions.add(rootIntervention);
         }
+        intervention.getItems().add(item);
         parent.refreshToothViews(new Date());
         pnlNewInterventionItem.refreshView();
         txtItemNote.setText("");
@@ -277,10 +290,21 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         if (interventionItem instanceof SideIntervention) {
             SideIntervention si = (SideIntervention) interventionItem;
             si.getToothSide().getSideInterventions().remove(si);
+        }else if (interventionItem instanceof RootIntervention) {
+            RootIntervention ri = (RootIntervention) interventionItem;
+            ri.getToothRoot().getRootInterventions().remove(ri);
         }
+        intervention.getItems().remove(interventionItem);
         parent.refreshToothViews(new Date());
         pnlNewInterventionItem.refreshView();
     }//GEN-LAST:event_btnRemoveInterventionItemActionPerformed
+
+    private void pnlSaveInterventionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlSaveInterventionMouseClicked
+        intervention.setDate(new Date());
+        intervention.setNote(txtInterventionNote.getText());
+        intervention.setUser(Session.getInstance().getUser());
+        Controller.getInstance().saveIntervention(intervention);
+    }//GEN-LAST:event_pnlSaveInterventionMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -289,7 +313,6 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel lblInterventionItemNote;
     private javax.swing.JLabel lblInterventionNote;
     private javax.swing.JLabel lblRootMenuItem;
@@ -299,6 +322,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private javax.swing.JPanel pnlNewInterventionMenu;
     private javax.swing.JButton pnlSaveIntervention;
     private javax.swing.JTable tblInterventionItems;
+    private javax.swing.JTextArea txtInterventionNote;
     private javax.swing.JTextArea txtItemNote;
     // End of variables declaration//GEN-END:variables
 
@@ -355,7 +379,9 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private void prepareTempFields() {
         intervention = new Intervention();
         intervention.setDate(new Date());
-        sideInterventions = new ArrayList<>();
+        intervention.setItems(new ArrayList<>());
+//        sideInterventions = new ArrayList<>();
+//        rootInterventions  = new ArrayList<>();
     }
 
     public void setNewTooth(Tooth selectedTooth) {

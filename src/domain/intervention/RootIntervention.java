@@ -48,7 +48,7 @@ public class RootIntervention extends InterventionItem {
 
     @Override
     public String getToothLabel() {
-        return toothRoot.getTooth().toString();
+        return toothRoot.getTooth().getLabel().toString();
     }
 
     @Override

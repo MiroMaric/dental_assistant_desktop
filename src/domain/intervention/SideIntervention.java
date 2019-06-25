@@ -26,12 +26,7 @@ public class SideIntervention extends InterventionItem {
         this(itemID, state);
         this.intervention = intervention;
     }
-
-//    public SideIntervention(ToothSideState state) {
-//        this.state = state;
-//        intervention = new Intervention(new Date(), null, null);
-//    }
-
+    
     public SideIntervention() {
 
     }

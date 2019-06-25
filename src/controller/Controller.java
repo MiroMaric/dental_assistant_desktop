@@ -77,10 +77,10 @@ public class Controller {
             List<ToothLabel> toothLabels = brokerDatabase.getAllRecord(new ToothLabel()).stream().map(o -> (ToothLabel) o).collect(Collectors.toList());
             //i za ovo bi bilo logicno napraviti novu stavku intervencije kao "pocetno stanje"
             ToothState toothState = (ToothState) brokerDatabase.findRecord(new ToothState(null, "prirodan", null, null));
-            
+
             List<ToothSideLabel> toothSideLabels = brokerDatabase.getAllRecord(new ToothSideLabel()).stream().map(o -> (ToothSideLabel) o).collect(Collectors.toList());
             ToothSideState toothSideState = (ToothSideState) brokerDatabase.findRecord(new ToothSideState(-1, "zdrava", null, -1));
-            
+
             List<ToothRootLabel> toothRootLabels = brokerDatabase.getAllRecord(new ToothRootLabel()).stream().map(o -> (ToothRootLabel) o).collect(Collectors.toList());
             ToothRootState toothRootState = (ToothRootState) brokerDatabase.findRecord(new ToothRootState(-1, "zdrav", null, -1));
             for (ToothLabel tl : toothLabels) {
@@ -98,7 +98,7 @@ public class Controller {
                     });
                     brokerDatabase.insertRecord(sideIntevention);
                 }
-                for(ToothRootLabel trl:toothRootLabels.subList(0, tooth.getLabel().getNumOfRoots())){
+                for (ToothRootLabel trl : toothRootLabels.subList(0, tooth.getLabel().getNumOfRoots())) {
                     ToothRoot toothRoot = new ToothRoot(tooth, trl);
                     RootIntervention rootIntervention = new RootIntervention(intervention, "Pocetno stanje", toothRoot, toothRootState);
                     brokerDatabase.insertRecord(toothRoot);
@@ -153,9 +153,10 @@ public class Controller {
                 t.setLabel((ToothLabel) brokerDatabase.findRecord(t.getLabel()));
                 t.setState((ToothState) brokerDatabase.findRecord(t.getState()));
                 t.setPatient(p);
-                
+
                 List<ToothSide> toothSides = brokerDatabase.findRecords(new ToothSide(), t).stream().map(o -> (ToothSide) o).collect(Collectors.toList());
                 for (ToothSide ts : toothSides) {
+                    ts.setTooth(t);
                     ts.setLabel((ToothSideLabel) brokerDatabase.findRecord(ts.getLabel()));
                     List<SideIntervention> sideInterventions = brokerDatabase.findRecords(new SideIntervention(), ts).stream().map(o -> (SideIntervention) o).collect(Collectors.toList());
                     System.out.println(sideInterventions.get(0).getItemID());
@@ -176,9 +177,10 @@ public class Controller {
                 }
                 toothSides.sort((s1, s2) -> s1.getLabel().getToothSideLabelID().compareTo(s2.getLabel().getToothSideLabelID()));
                 t.setSides(toothSides);
-                
+
                 List<ToothRoot> toothRoots = brokerDatabase.findRecords(new ToothRoot(), t).stream().map(o -> (ToothRoot) o).collect(Collectors.toList());
                 for (ToothRoot tr : toothRoots) {
+                    tr.setTooth(t);
                     tr.setLabel((ToothRootLabel) brokerDatabase.findRecord(tr.getLabel()));
                     List<RootIntervention> rootInterventions = brokerDatabase.findRecords(new RootIntervention(), tr).stream().map(o -> (RootIntervention) o).collect(Collectors.toList());
                     System.out.println(rootInterventions.get(0).getItemID());
@@ -291,6 +293,26 @@ public class Controller {
     public boolean updatePatient(Patient patient) {
         try {
             return brokerDatabase.updateRecord(patient);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean saveIntervention(Intervention intervention) {
+        try {
+            DatabaseConnection.getInstance().getConnection().setAutoCommit(false);
+            brokerDatabase.insertRecord(intervention);
+            for (InterventionItem interventionItem : intervention.getItems()) {
+                brokerDatabase.insertRecord(new InterventionItem(interventionItem.getItemID(), interventionItem.getIntervention(), interventionItem.getNote()) {
+                    @Override
+                    public String getToothLabel() {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                });
+                brokerDatabase.insertRecord(interventionItem);
+            }
+            DatabaseConnection.getInstance().getConnection().commit();
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
