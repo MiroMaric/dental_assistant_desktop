@@ -10,12 +10,12 @@ import form.ColorConstant;
 import form.MyTableCellRenderer;
 import form.cardboard.FormCardboard;
 import icon.ErrorIcon;
+import icon.SuccessIcon;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import session.Session;
@@ -27,8 +27,6 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private Intervention intervention;
     private PanelNewInterventionItem pnlNewInterventionItem;
     private TableModelToothInterventionItems tableModelToothInterventions;
-//    private List<SideIntervention> sideInterventions;
-//    private List<RootIntervention> rootInterventions;
 
     public PanelNewIntervention(FormCardboard parent,Tooth tooth) {
         this.parent = parent;
@@ -51,7 +49,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblInterventionItemNote = new javax.swing.JLabel();
         pnlDynamicContent = new javax.swing.JPanel();
         btnAddInterventionitem = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        scrollPaneTblInterventionItems = new javax.swing.JScrollPane();
         tblInterventionItems = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtInterventionNote = new javax.swing.JTextArea();
@@ -102,7 +100,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tblInterventionItems);
+        scrollPaneTblInterventionItems.setViewportView(tblInterventionItems);
 
         txtInterventionNote.setColumns(20);
         txtInterventionNote.setRows(5);
@@ -187,7 +185,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(scrollPaneTblInterventionItems, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlDynamicContent, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,7 +224,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
                         .addComponent(btnAddInterventionitem, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(pnlDynamicContent, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPaneTblInterventionItems, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -271,11 +269,9 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         if (item instanceof SideIntervention) {
             SideIntervention sideIntervention = (SideIntervention) item;
             sideIntervention.getToothSide().getSideInterventions().add(sideIntervention);
-            //sideInterventions.add(sideIntervention);
         }else if(item instanceof RootIntervention){
             RootIntervention rootIntervention = (RootIntervention) item;
             rootIntervention.getToothRoot().getRootInterventions().add(rootIntervention);
-            //rootInterventions.add(rootIntervention);
         }
         intervention.getItems().add(item);
         parent.refreshToothViews(new Date());
@@ -285,6 +281,10 @@ public class PanelNewIntervention extends javax.swing.JPanel {
 
     private void btnRemoveInterventionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInterventionItemActionPerformed
         int index = tblInterventionItems.getSelectedRow();
+        if(index==-1){
+            JOptionPane.showMessageDialog(this, "Niste izabrali nijednu stavku", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
         InterventionItem interventionItem = tableModelToothInterventions.getInterventionItem(index);
         tableModelToothInterventions.removeInterventionItem(index);
         if (interventionItem instanceof SideIntervention) {
@@ -300,10 +300,21 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRemoveInterventionItemActionPerformed
 
     private void pnlSaveInterventionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlSaveInterventionMouseClicked
+        if(tableModelToothInterventions.getRowCount()==0){
+            JOptionPane.showMessageDialog(this, "Niste uneli nijednu stavku intervencije", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
         intervention.setDate(new Date());
         intervention.setNote(txtInterventionNote.getText());
         intervention.setUser(Session.getInstance().getUser());
-        Controller.getInstance().saveIntervention(intervention);
+        if(Controller.getInstance().saveIntervention(intervention)){
+            JOptionPane.showMessageDialog(this, "Intervencija je sačuvana", "Intervencija", JOptionPane.OK_OPTION,new SuccessIcon());
+            prepareTblInterventionItem();
+            setStartView();
+            prepareTempFields();
+        }else{
+            JOptionPane.showMessageDialog(this, "Došlo je do greške", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+        }
     }//GEN-LAST:event_pnlSaveInterventionMouseClicked
 
 
@@ -311,7 +322,6 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private javax.swing.JButton btnAddInterventionitem;
     private javax.swing.JButton btnRemoveInterventionItem;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblInterventionItemNote;
     private javax.swing.JLabel lblInterventionNote;
@@ -321,6 +331,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private javax.swing.JPanel pnlDynamicContent;
     private javax.swing.JPanel pnlNewInterventionMenu;
     private javax.swing.JButton pnlSaveIntervention;
+    private javax.swing.JScrollPane scrollPaneTblInterventionItems;
     private javax.swing.JTable tblInterventionItems;
     private javax.swing.JTextArea txtInterventionNote;
     private javax.swing.JTextArea txtItemNote;
@@ -348,6 +359,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         setBackground(ColorConstant.GREEN_STRONG);
         lblInterventionItemNote.setForeground(ColorConstant.LIGHT_COLOR);
         lblInterventionNote.setForeground(ColorConstant.LIGHT_COLOR);
+        scrollPaneTblInterventionItems.getViewport().setBackground(ColorConstant.GREEN_STRONG);
     }
     
     
@@ -364,6 +376,8 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     }
 
     private void setStartView() {
+        txtInterventionNote.setText("");
+        txtItemNote.setText("");
         pnlNewInterventionItem = new PanelNewSideIntervention(tooth);
         refreshDynamicContent();
     }
@@ -380,8 +394,6 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         intervention = new Intervention();
         intervention.setDate(new Date());
         intervention.setItems(new ArrayList<>());
-//        sideInterventions = new ArrayList<>();
-//        rootInterventions  = new ArrayList<>();
     }
 
     public void setNewTooth(Tooth selectedTooth) {

@@ -3,6 +3,7 @@ package form.component;
 import domain.tooth.Tooth;
 import domain.tooth.ToothRootLabel;
 import domain.tooth.ToothRootState;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -15,10 +16,14 @@ public abstract class PanelTooth extends JPanel {
     protected Tooth tooth;
     protected Date date;
     protected int x,y;
+    protected Color c1,c2;
+    
     public PanelTooth(int x,Tooth tooth,Date date) {
         this.tooth = tooth;
         this.date = date;
         this.x = x;
+        this.c1 = Color.WHITE;
+        this.c2 = Color.PINK;
         adjustPanel();
     }
     
@@ -34,8 +39,8 @@ public abstract class PanelTooth extends JPanel {
                 break;
             }
             case 3: {
-                //panelToothRoots = new PanelToothThreeRoots(x, tooth);
-                panelToothRoots = new PanelToothTwoRoots(x, tooth,date);
+                panelToothRoots = new PanelToothThreeRoots(x, tooth,date);
+                //panelToothRoots = new PanelToothTwoRoots(x, tooth,date);
                 break;
             }
         }
@@ -54,8 +59,8 @@ public abstract class PanelTooth extends JPanel {
                 break;
             }
             case 3: {
-                //panelToothRoots = new PanelToothThreeRoots(x,tooth,currentStatesOfSides);
-                panelToothRoots = new PanelToothTwoRoots(x,tooth,currentStatesOfSides);
+                panelToothRoots = new PanelToothThreeRoots(x,tooth,currentStatesOfSides);
+                //panelToothRoots = new PanelToothTwoRoots(x,tooth,currentStatesOfSides);
                 break;
             }
         }

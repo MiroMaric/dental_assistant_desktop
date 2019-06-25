@@ -12,26 +12,26 @@ import java.util.HashMap;
 public class PanelToothTwoRoots extends PanelTooth{
 
     
-    private final Color c1, c2;
     private ToothRootState firstRootState;
     private ToothRootState secondRootState;
     //c1-gledj;c2-?;c3-1.koren;c4-2.koren  
     public PanelToothTwoRoots(int x, Tooth tooth,Date date) {
         super(x,tooth,date);
         initializeStates();
-        this.c1 = Color.WHITE;
-        this.c2 = Color.PINK;
         this.y = (int)Math.round(x*1.75);
     }
 
     public PanelToothTwoRoots(int x,Tooth tooth,HashMap<ToothRootLabel, ToothRootState> currentStatesOfRoots) {
         super(x,tooth,null);
         initializeStates(currentStatesOfRoots);
-        this.c1 = Color.WHITE;
-        this.c2 = Color.PINK;
         this.y = (int)Math.round(x*1.75);
         
     }
+    //         int xpoints2[] = {x/20,x/10,x/4,3*x/10,34*x/100,3*x/10,2*x/5,11*x/20,13*x/20,3*x/4,7*x/10,4*x/5,9*x/10,4*x/5,4*x/5};
+//        int ypoints2[] = {5*y/7,5*y/21,5*y/42,5*y/42,4*y/21,60,4*y/21,20,5,15,4*y/21,y/6,5*y/21,19*y/42,2*y/3};
+//        int npoints2 = 15;
+//        
+
     //100x175
     @Override
     protected void doDrawing(Graphics2D g2d) {
@@ -94,7 +94,6 @@ public class PanelToothTwoRoots extends PanelTooth{
 
     private void initializeStates(HashMap<ToothRootLabel, ToothRootState> currentStatesOfRoots) {
         currentStatesOfRoots.keySet().forEach((rootLabel) -> {
-            System.out.println("------>" + rootLabel.getName().toLowerCase());
             switch(rootLabel.getName().toLowerCase()){
                 case "koren1":
                     firstRootState = currentStatesOfRoots.get(rootLabel);

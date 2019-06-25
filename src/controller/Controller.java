@@ -313,6 +313,7 @@ public class Controller {
                 brokerDatabase.insertRecord(interventionItem);
             }
             DatabaseConnection.getInstance().getConnection().commit();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }

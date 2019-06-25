@@ -10,22 +10,17 @@ import java.util.HashMap;
 
 public class PanelToothOneRoots extends PanelTooth {
 
-    private Color c1, c2;
     private ToothRootState rootState;
 
     public PanelToothOneRoots(int x, Tooth tooth, Date date) {
         super(x, tooth, date);
         initializeStates();
-        this.c1 = Color.WHITE;
-        this.c2 = Color.PINK;
         this.y = (int) Math.round(x * 2.45);
     }
 
     public PanelToothOneRoots(int x,Tooth tooth,HashMap<ToothRootLabel, ToothRootState> currentStatesOfSides) {
         super(x,tooth,null);
         initializeStates(currentStatesOfSides);
-        this.c1 = Color.WHITE;
-        this.c2 = Color.PINK;
         this.y = (int) Math.round(x * 2.45);
     }
 

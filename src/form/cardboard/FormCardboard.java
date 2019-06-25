@@ -379,25 +379,6 @@ public class FormCardboard extends javax.swing.JFrame {
                     }
                 }
             }
-
-//            private PanelTooth getToothRootsPanel(Tooth tooth) {
-//                PanelTooth panelToothRoots = null;
-//                switch (tooth.getLabel().getNumOfRoots()) {
-//                    case 1: {
-//                        panelToothRoots = new PanelToothOneRoots(100, 245, tooth);
-//                        break;
-//                    }
-//                    case 2: {
-//                        panelToothRoots = new PanelToothTwoRoots(100, 175, tooth);
-//                        break;
-//                    }
-//                    case 3: {
-//                        panelToothRoots = new PanelToothThreeRoots(100, 210, tooth);
-//                        break;
-//                    }
-//                }
-//                return panelToothRoots;
-//            }
         });
     }
 
@@ -411,7 +392,7 @@ public class FormCardboard extends javax.swing.JFrame {
 
     public void refreshToothViews(Date date) {
         pnlToothRoots.removeAll();
-        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100,date));
+        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100, date));
         pnlToothRoots.revalidate();
         pnlToothSides.removeAll();
         pnlToothSides.add(new PanelToothSides(selectedTooth, date));
@@ -430,7 +411,16 @@ public class FormCardboard extends javax.swing.JFrame {
                     return;
                 }
                 Date date = tableModelToothInterventions.getInterventionDate(selectedRowIndex);
-                refreshToothViews(date);
+                tblToothInterventions.valueChanged(e);
+                refreshRootsAndSidesViewOnly(date);
+            }
+
+            private void refreshRootsAndSidesViewOnly(Date date) {
+                pnlToothRoots.removeAll();
+                pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100, date));
+                pnlToothRoots.revalidate();
+                pnlToothSides.removeAll();
+                pnlToothSides.add(new PanelToothSides(selectedTooth, date));
             }
         });
     }
@@ -451,7 +441,7 @@ public class FormCardboard extends javax.swing.JFrame {
         selectedTooth = patient.getTeeth().get(0);
         ((JLabel) pnlJaw.getComponents()[0]).setBorder(new LineBorder(Color.yellow, 2));
         tableModelToothInterventions.setTooth(selectedTooth);
-        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100,new Date()));
+        pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100, new Date()));
         pnlToothSides.add(new PanelToothSides(selectedTooth, new Date()));
     }
 
