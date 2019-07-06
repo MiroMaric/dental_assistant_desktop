@@ -7,6 +7,8 @@ import form.MyTableCellRenderer;
 import form.TableModelPatient;
 import icon.ErrorIcon;
 import java.awt.Color;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableCellRenderer;
 
@@ -70,20 +72,19 @@ public class FormSearchCardboard extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(158, 158, 158)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(6, 6, 6)
+                .addComponent(lblFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 10, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(156, 156, 156)
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,9 +94,9 @@ public class FormSearchCardboard extends javax.swing.JDialog {
                     .addComponent(lblFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -117,27 +118,45 @@ public class FormSearchCardboard extends javax.swing.JDialog {
         int row = tblPatients.getSelectedRow();
         if (row == -1) {
             String message = "Morate prvo izabrati pacijenta";
-            JOptionPane.showMessageDialog(this,message, "Greška", 0, new ErrorIcon());
+            JOptionPane.showMessageDialog(this, message, "Greška", 0, new ErrorIcon());
             return;
         }
         TableModelPatient tmp = (TableModelPatient) tblPatients.getModel();
         Patient patient = tmp.getFilteredPatients().get(row);
-        //Ucitavamo pacijenta sa svim potrebni podacima
-        patient = Controller.getInstance().getPatient(patient);
-        FormCardboard cardboardForm = new FormCardboard(patient);
-        dispose();
-        cardboardForm.setVisible(true);
-        cardboardForm.toFront();
+        try {
+            //Ucitavamo pacijenta sa svim potrebni podacima
+            patient = Controller.getInstance().findCardboard(patient);
+            FormCardboard cardboardForm = new FormCardboard(patient);
+            dispose();
+            cardboardForm.setVisible(true);
+            cardboardForm.toFront();
+        } catch (Exception ex) {
+             JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+        }
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void adjustForm(){
+    private void adjustForm() {
         setLocationRelativeTo(null);
         setResizable(false);
     }
 
     private void preparePatientsTable() {
-        //Ucitavamo pacijente sa "ogoljenim" podacima radi perfomansi
-        tblPatients.setModel(new TableModelPatient(Controller.getInstance().getAllPatients()));
+        try {
+            //Ucitavamo pacijente sa "ogoljenim" podacima radi perfomansi
+            tblPatients.setModel(new TableModelPatient(Controller.getInstance().getAllPatients()));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            txtFilter.setEnabled(false);
+            addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentShown(ComponentEvent e) {
+                    dispose();
+                }
+            });
+            return;
+        }
         TableCellRenderer tcr = new MyTableCellRenderer();
         tblPatients.getTableHeader().setDefaultRenderer(tcr);
         tblPatients.getTableHeader().setReorderingAllowed(false);

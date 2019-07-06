@@ -5,7 +5,8 @@ import domain.User;
 import form.component.myfield.MyInputTextField;
 import form.component.myfield.MyField;
 import form.component.myfield.MyInputPasswordField;
-import java.awt.Color;
+import icon.ErrorIcon;
+import icon.SuccessIcon;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 
@@ -63,18 +64,25 @@ public class FormSignUp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
-        for(Component c:pnlSignUp.getComponents()){
-            MyField regField = (MyField)c;
-            if(!regField.validInput()){
-                JOptionPane.showMessageDialog(this, "Polja nisu popunjena ispravno.", "Greška", JOptionPane.ERROR_MESSAGE);
+        for (Component c : pnlSignUp.getComponents()) {
+            MyField regField = (MyField) c;
+            if (!regField.validInput()) {
+                JOptionPane.showMessageDialog(this, "Polja nisu popunjena ispravno", "Registracija", JOptionPane.OK_OPTION, new ErrorIcon());
                 return;
             }
         }
-        User user = new User((String)pnlUsername.getValue(),(String)pnlPassword.getValue(),(String)pnlEmail.getValue()
-                ,(String)pnlFirstname.getValue(),(String)pnlLastname.getValue(),(String)pnlAdress.getValue(),
-                (String)pnlPhone.getValue());
+        User user = new User((String) pnlUsername.getValue(), (String) pnlPassword.getValue(), (String) pnlEmail.getValue(),
+                 (String) pnlFirstname.getValue(), (String) pnlLastname.getValue(), (String) pnlAdress.getValue(),
+                (String) pnlPhone.getValue());
         System.out.println(user);
-        boolean ok = Controller.getInstance().insertRecord(user);
+        try {
+            Controller.getInstance().registerNewUser(user);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Uspešno ste registrovani", "Uspešna registracija", JOptionPane.OK_OPTION, new SuccessIcon());
+        dispose();
     }//GEN-LAST:event_btnSignUpActionPerformed
 
     private MyField pnlUsername;
@@ -92,13 +100,13 @@ public class FormSignUp extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void initFields() {
-        pnlUsername = new MyInputTextField("Korisničko ime:", "Korisničko ime mora imati 4 - 20 karaktera", "^((\\w){4,20})$",true);
-        pnlPassword = new MyInputPasswordField("Šifra", "Šifra mora imati 6-20 karaktera", "^((\\w){6,20})$",true);
-        pnlEmail = new MyInputTextField("E-pošta:", "E-pošta mora biti valida, e.g. me@mydomain.com", "^(([a-zA-Z\\d_\\.-]+)@([a-z\\d-]+)\\.([a-z]{2,8})(\\.[a-z]{2,8})?)$",true);
-        pnlFirstname = new MyInputTextField("Ime:", "Ime mora imati 2 - 15 karaktera", "^(([A-Za-z]){2,15})$",true);
-        pnlLastname = new MyInputTextField("Prezime:", "Prezime mora imati 2 - 15 karaktera", "^(([A-Za-z]){2,15})$",true);
-        pnlAdress = new MyInputTextField("Adresa:", "Adresa mora imati 4 - 20 karaktera", "^(([\\w, ]){4,20})$",false);
-        pnlPhone = new MyInputTextField("Telefon:", "Telefon mora biti unet u ispravnom formatu", "^((\\d){7,10})$",false);
+        pnlUsername = new MyInputTextField("Korisničko ime:", "Korisničko ime mora imati 4 - 20 karaktera", "^((\\w){4,20})$", true);
+        pnlPassword = new MyInputPasswordField("Šifra", "Šifra mora imati 6-20 karaktera", "^((\\w){6,20})$", true);
+        pnlEmail = new MyInputTextField("E-pošta:", "E-pošta mora biti valida, e.g. me@mydomain.com", "^(([a-zA-Z\\d_\\.-]+)@([a-z\\d-]+)\\.([a-z]{2,8})(\\.[a-z]{2,8})?)$", true);
+        pnlFirstname = new MyInputTextField("Ime:", "Ime mora imati 2 - 15 karaktera", "^(([A-Za-z]){2,15})$", true);
+        pnlLastname = new MyInputTextField("Prezime:", "Prezime mora imati 2 - 15 karaktera", "^(([A-Za-z]){2,15})$", true);
+        pnlAdress = new MyInputTextField("Adresa:", "Adresa mora imati 4 - 20 karaktera", "^(([\\w, ]){4,20})$", false);
+        pnlPhone = new MyInputTextField("Telefon:", "Telefon mora biti unet u ispravnom formatu", "^((\\d){7,10})$", false);
 
         pnlSignUp.add(pnlUsername);
         pnlSignUp.add(pnlPassword);

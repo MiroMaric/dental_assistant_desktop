@@ -13,8 +13,8 @@ public class FormCardboardInfo extends javax.swing.JDialog {
 
     private final List<MyField> myFields;
     protected Patient patient;
-    
-    public FormCardboardInfo(java.awt.Frame parent, boolean modal,Patient patient) {
+
+    public FormCardboardInfo(java.awt.Frame parent, boolean modal, Patient patient) {
         super(parent, modal);
         myFields = new ArrayList<>();
         this.patient = patient;
@@ -124,19 +124,29 @@ public class FormCardboardInfo extends javax.swing.JDialog {
         Date birthDate = (Date) pnlBirthDate.getValue();
         String adress = (String) pnlAdress.getValue();
         String phone = (String) pnlPhone.getValue();
-        if(patient!=null){
+        if (patient != null) {
             patient.setFirstname(firstname);
             patient.setLastname(lastname);
             patient.setEmail(email);
             patient.setBirthDate(birthDate);
             patient.setAddress(adress);
             patient.setPhone(phone);
-        }else{
-            patient =  new Patient(firstname, lastname, email, adress, phone, birthDate, new Date());
+        } else {
+            patient = new Patient(firstname, lastname, email, adress, phone, birthDate, new Date());
         }
     }
-    
-    protected void populateForm(Patient patient){
+
+    protected Patient getNewPatientFromForm() {
+        String firstname = (String) pnlFirstname.getValue();
+        String lastname = (String) pnlLastname.getValue();
+        String email = (String) pnlEmail.getValue();
+        Date birthDate = (Date) pnlBirthDate.getValue();
+        String adress = (String) pnlAdress.getValue();
+        String phone = (String) pnlPhone.getValue();
+        return new Patient(patient.getPatientID(), firstname, lastname, email, adress, phone, birthDate, patient.getCardboardDate(), patient.isDeactivated());
+    }
+
+    protected void populateForm(Patient patient) {
         pnlFirstname.setValue(patient.getFirstname());
         pnlLastname.setValue(patient.getLastname());
         pnlEmail.setValue(patient.getEmail());
@@ -144,8 +154,8 @@ public class FormCardboardInfo extends javax.swing.JDialog {
         pnlAdress.setValue(patient.getAddress());
         pnlPhone.setValue(patient.getPhone());
     }
-    
-    protected boolean formIsValid(){
+
+    protected boolean formIsValid() {
         return myFields.stream().noneMatch((myField) -> (!myField.validInput()));
     }
 }

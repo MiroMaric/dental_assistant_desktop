@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
  */
 public class FormNewCardboard extends FormCardboardInfo {
 
-    public FormNewCardboard(Frame parent, boolean modal,Patient patient) {
-        super(parent, modal,patient);
+    public FormNewCardboard(Frame parent, boolean modal, Patient patient) {
+        super(parent, modal, patient);
         prepareForm();
     }
 
@@ -25,16 +25,16 @@ public class FormNewCardboard extends FormCardboardInfo {
         btn.addActionListener((ActionEvent e) -> {
             if (formIsValid()) {
                 populatePatient();
-                if (Controller.getInstance().savePatient(patient)) {
-                    JOptionPane.showMessageDialog(this, "Novi karton je krairan", "Uspešno kreiranje", JOptionPane.OK_OPTION,new SuccessIcon());
+                try {
+                    Controller.getInstance().createCardboard(patient);
+                    JOptionPane.showMessageDialog(this, "Sistem je otvorio novi karton", "Uspešno kreiranje", JOptionPane.OK_OPTION, new SuccessIcon());
                     dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Došlo je do greške", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Podaci nisu uneti ispravno", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
             }
         });
     }
-
 }

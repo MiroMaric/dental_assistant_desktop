@@ -1,4 +1,4 @@
-package form.component.patient_statistics;
+package form.cardboard;
 
 import domain.Patient;
 

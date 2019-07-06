@@ -17,4 +17,5 @@ public interface ColorConstant {
     public static final Color NOTE_COLOR = new Color(254,255,156);
     public static final Color LIGHT_COLOR = new Color(255,255,255);
     public static final Color GRAY = new Color(102,102,102);
+    public static final Color MENU_COLOR = new Color(0,85,85);
 }

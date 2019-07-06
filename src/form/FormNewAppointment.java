@@ -17,11 +17,11 @@ import session.Session;
 public class FormNewAppointment extends javax.swing.JDialog {
 
     //Ovo obrisi odavde!
-    TableModelSchedule tableModelSchedule;
-    List<Appointment> scheduledAppointments;
-    GregorianCalendar startTime;
-    GregorianCalendar time;
-    int selectedScheduledAppointments;
+    private final TableModelSchedule tableModelSchedule;
+    private final List<Appointment> scheduledAppointments;
+    private final GregorianCalendar startTime;
+    private final GregorianCalendar time;
+    private int selectedScheduledAppointments;
 
     public FormNewAppointment(java.awt.Frame parent, boolean modal, GregorianCalendar time, TableModelSchedule tms) {
         super(parent, modal);
@@ -155,7 +155,7 @@ public class FormNewAppointment extends javax.swing.JDialog {
 
         lblScheduledAppointments.setText("Zakazani termini:");
 
-        btnRemove.setText("Poništi");
+        btnRemove.setText("Otkaži");
         btnRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveActionPerformed(evt);
@@ -302,6 +302,12 @@ public class FormNewAppointment extends javax.swing.JDialog {
     private void adjustForm() {
         setLocationRelativeTo(null);
         lblDateValue.setText(new SimpleDateFormat("kk-dd.MM.yyyy").format(time.getTime()));
+        if(time.before(new GregorianCalendar())){
+            btnSaveChange.setEnabled(false);
+            btnRemove.setEnabled(false);
+            btnSaveChange.setToolTipText("Nije moguće rezervisati termin");
+            btnRemove.setToolTipText("Izabrani termin više nije moguće menjati");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -329,7 +335,14 @@ public class FormNewAppointment extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void preparePatientsTable() {
-        tblPatients.setModel(new TableModelPatient(Controller.getInstance().getAllPatients()));
+        try {
+            tblPatients.setModel(new TableModelPatient(Controller.getInstance().getAllPatients()));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            txtFilter.setEnabled(false);
+            return;
+        }
         tblPatients.getTableHeader().setDefaultRenderer(new MyTableCellRenderer());
         tblPatients.getTableHeader().setReorderingAllowed(false);
         tblPatients.setDefaultRenderer(Object.class, new MyTableCellRenderer(ColorConstant.LIGHT_COLOR));
@@ -370,14 +383,14 @@ public class FormNewAppointment extends javax.swing.JDialog {
 
     private void setChangeAppointmentsState() {
         btnRemove.setVisible(true);
-        btnSaveChange.setText("Promeni");
+        btnSaveChange.setText("Izmeni");
         tblPatients.clearSelection();
         txtPatient.setText(scheduledAppointments.get(selectedScheduledAppointments).getPatient().toString());
         txtDescription.setText(scheduledAppointments.get(selectedScheduledAppointments).getDescription());
         prepareChooseStartTime();
         prepareChooseDuration();
     }
-    
+
     private void saveAppointment() {
         int row = tblPatients.getSelectedRow();
         if (row == -1) {
@@ -388,19 +401,23 @@ public class FormNewAppointment extends javax.swing.JDialog {
         TableModelPatient tmp = (TableModelPatient) tblPatients.getModel();
         User user = Session.getInstance().getUser();
         Patient patient = tmp.getFilteredPatients().get(row);
-        //GregorianCalendar startTime = new GregorianCalendar();
         GregorianCalendar endTime = new GregorianCalendar();
-        //startTime.setTime(time.getTime());
         startTime.set(GregorianCalendar.MINUTE, (Integer) (cmbStart.getSelectedItem()));
         endTime.setTime(startTime.getTime());
         endTime.add(GregorianCalendar.MINUTE, (Integer) (cmbDuration.getSelectedItem()));
         String description = txtDescription.getText();
         Appointment appointment = new Appointment(patient, user, (GregorianCalendar) startTime.clone(), (GregorianCalendar) endTime.clone(), description);
+        try {
+            Controller.getInstance().saveAppointment(appointment);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,ex.getMessage(),
+                    "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
         tableModelSchedule.addAppointments(appointment);
-        Controller.getInstance().saveAppointment(appointment);
         dispose();
     }
-    
+
     private void changeAppointment() {
         int row = tblAppointments.getSelectedRow();
         if (row == -1) {
@@ -413,18 +430,37 @@ public class FormNewAppointment extends javax.swing.JDialog {
         startTime.set(GregorianCalendar.MINUTE, (Integer) (cmbStart.getSelectedItem()));
         endTime.setTime(startTime.getTime());
         endTime.add(GregorianCalendar.MINUTE, (Integer) (cmbDuration.getSelectedItem()));
+        Appointment appointment = 
+                new Appointment(scheduledAppointments.get(row).getAppointmentID(),
+                scheduledAppointments.get(row).getPatient(),
+                Session.getInstance().getUser(),
+                startTime,
+                endTime,
+                description);
+        try {
+            Controller.getInstance().updateAppointment(appointment);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
         scheduledAppointments.get(row).setDescription(description);
         scheduledAppointments.get(row).setStartTime(startTime);
         scheduledAppointments.get(row).setEndTime(endTime);
         scheduledAppointments.get(row).setUser(Session.getInstance().getUser());
         tableModelSchedule.fireTableDataChanged();
-        Controller.getInstance().updateAppointment(scheduledAppointments.get(row));
         dispose();
     }
-    
+
     private void deleteAppointment(int row) {
+        try {
+            Controller.getInstance().deleteAppointment(scheduledAppointments.get(row));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
         tableModelSchedule.removeScheduledAppointment(scheduledAppointments.get(row));
-        Controller.getInstance().deleteAppointment(scheduledAppointments.get(row));
         dispose();
     }
 

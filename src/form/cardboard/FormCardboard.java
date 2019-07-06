@@ -3,10 +3,12 @@ package form.cardboard;
 import controller.Controller;
 import domain.Patient;
 import domain.User;
+import domain.intervention.InterventionItem;
 import domain.tooth.Tooth;
 import form.ColorConstant;
 import form.MyTableCellRenderer;
 import form.TableModelToothInterventions;
+import form.component.PanelAllTeethView;
 import form.component.PanelJaw;
 import form.component.PanelLegend;
 import form.component.PanelTeeth;
@@ -14,8 +16,7 @@ import form.component.PanelTooth;
 import form.component.PanelToothSides;
 import form.component.intervention.PanelNewIntervention;
 import form.component.menu_item.PanelMenuBar;
-import form.component.patient_profile.PanelPatientProfile;
-import form.component.patient_statistics.PanelPatientStatistics;
+import icon.FalseIcon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -24,8 +25,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -43,7 +47,11 @@ public class FormCardboard extends javax.swing.JFrame {
 
     public FormCardboard(Patient patient) {
         //this.patient = patient;
-        this.patient = controller.Controller.getInstance().getPatient(new Patient("55f9785c-ee63-4c9b-af65-775b17e2f65a"));
+        try {
+            this.patient = controller.Controller.getInstance().findCardboard(new Patient("7bbd3175-ee4d-4601-8278-11b2848f9a56"));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
         Session.getInstance().setUser(new User("miko"));
         pnlJaw = new PanelJaw();
         initComponents();
@@ -87,15 +95,21 @@ public class FormCardboard extends javax.swing.JFrame {
         tblToothInterventions = new javax.swing.JTable();
         pnlRootStateLegend = new javax.swing.JPanel();
         pnlSideStateLegend = new javax.swing.JPanel();
+        pnlToothLabel = new javax.swing.JPanel();
+        lblToothLabel = new javax.swing.JLabel();
+        lbllblTothLabel = new javax.swing.JLabel();
         pnlSouth = new javax.swing.JPanel();
         scrollPaneSouth = new javax.swing.JScrollPane();
+        jLabel1 = new javax.swing.JLabel();
+        lblDentalAssistantImg = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         pnlWest.setMinimumSize(new java.awt.Dimension(50, 0));
         pnlWest.setPreferredSize(new java.awt.Dimension(500, 600));
 
-        pnlMenu.setBackground(new java.awt.Color(102, 102, 102));
+        pnlMenu.setBackground(new java.awt.Color(0, 150, 150));
 
         javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
         pnlMenu.setLayout(pnlMenuLayout);
@@ -171,6 +185,11 @@ public class FormCardboard extends javax.swing.JFrame {
                 "Title 1", "Title 2"
             }
         ));
+        tblToothInterventions.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblToothInterventionsMouseClicked(evt);
+            }
+        });
         scrollPaneToothInterventions.setViewportView(tblToothInterventions);
 
         pnlRootStateLegend.setPreferredSize(new java.awt.Dimension(100, 150));
@@ -199,6 +218,35 @@ public class FormCardboard extends javax.swing.JFrame {
             .addGap(0, 150, Short.MAX_VALUE)
         );
 
+        lblToothLabel.setFont(new java.awt.Font("Tempus Sans ITC", 0, 24)); // NOI18N
+        lblToothLabel.setForeground(new java.awt.Color(255, 255, 255));
+        lblToothLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblToothLabel.setText(" ");
+        lblToothLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        lbllblTothLabel.setForeground(new java.awt.Color(255, 255, 255));
+        lbllblTothLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbllblTothLabel.setText("Oznaka zuba:");
+
+        javax.swing.GroupLayout pnlToothLabelLayout = new javax.swing.GroupLayout(pnlToothLabel);
+        pnlToothLabel.setLayout(pnlToothLabelLayout);
+        pnlToothLabelLayout.setHorizontalGroup(
+            pnlToothLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlToothLabelLayout.createSequentialGroup()
+                .addGroup(pnlToothLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblToothLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbllblTothLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
+        );
+        pnlToothLabelLayout.setVerticalGroup(
+            pnlToothLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlToothLabelLayout.createSequentialGroup()
+                .addComponent(lbllblTothLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblToothLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout pnlEastLayout = new javax.swing.GroupLayout(pnlEast);
         pnlEast.setLayout(pnlEastLayout);
         pnlEastLayout.setHorizontalGroup(
@@ -208,12 +256,14 @@ public class FormCardboard extends javax.swing.JFrame {
                 .addComponent(scrollPaneToothInterventions, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEastLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEastLayout.createSequentialGroup()
+                .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlEastLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pnlToothSides, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlEastLayout.createSequentialGroup()
+                    .addGroup(pnlEastLayout.createSequentialGroup()
+                        .addComponent(pnlToothLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pnlToothRoots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)))
                 .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -224,10 +274,13 @@ public class FormCardboard extends javax.swing.JFrame {
         pnlEastLayout.setVerticalGroup(
             pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlEastLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
                 .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlToothRoots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlRootStateLegend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlEastLayout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnlToothRoots, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pnlRootStateLegend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(pnlToothLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(pnlEastLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlToothSides, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
@@ -243,17 +296,38 @@ public class FormCardboard extends javax.swing.JFrame {
 
         scrollPaneSouth.setPreferredSize(new java.awt.Dimension(750, 100));
 
+        jLabel1.setText(" ");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel1MousePressed(evt);
+            }
+        });
+
+        lblDentalAssistantImg.setText(" ");
+
         javax.swing.GroupLayout pnlSouthLayout = new javax.swing.GroupLayout(pnlSouth);
         pnlSouth.setLayout(pnlSouthLayout);
         pnlSouthLayout.setHorizontalGroup(
             pnlSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSouthLayout.createSequentialGroup()
-                .addGap(500, 500, 500)
-                .addComponent(scrollPaneSouth, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
+                .addGroup(pnlSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblDentalAssistantImg, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPaneSouth, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE))
         );
         pnlSouthLayout.setVerticalGroup(
             pnlSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPaneSouth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+            .addComponent(scrollPaneSouth, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+            .addGroup(pnlSouthLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSouthLayout.createSequentialGroup()
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(lblDentalAssistantImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnlSouth, java.awt.BorderLayout.PAGE_END);
@@ -261,13 +335,37 @@ public class FormCardboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
+        JDialog teethForm = new JDialog();
+        teethForm.setTitle("Pregled svih zuba");
+        teethForm.setModal(true);
+        teethForm.setSize(1200, 500);
+        teethForm.setLocationRelativeTo(null);
+        teethForm.add(new PanelAllTeethView(patient,1200));
+        teethForm.setVisible(true);
+    }//GEN-LAST:event_jLabel1MousePressed
+
+    private void tblToothInterventionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblToothInterventionsMouseClicked
+        int i = tblToothInterventions.getSelectedRow();
+        if(i<0)
+            return;
+        InterventionItem interventionItem = tableModelToothInterventions.getIntervention(i);
+        new FormInterventionItemInfo(this, true, interventionItem).setVisible(true);
+    }//GEN-LAST:event_tblToothInterventionsMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblDentalAssistantImg;
+    private javax.swing.JLabel lblToothLabel;
+    private javax.swing.JLabel lbllblTothLabel;
     private javax.swing.JPanel pnlDynamicContent;
     private javax.swing.JPanel pnlEast;
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlRootStateLegend;
     private javax.swing.JPanel pnlSideStateLegend;
     private javax.swing.JPanel pnlSouth;
+    private javax.swing.JPanel pnlToothLabel;
     private javax.swing.JPanel pnlToothRoots;
     private javax.swing.JPanel pnlToothSides;
     private javax.swing.JPanel pnlWest;
@@ -277,6 +375,7 @@ public class FormCardboard extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void adjustForm() {
+        setTitle(patient.getFirstname() + " " + patient.getLastname());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -288,12 +387,14 @@ public class FormCardboard extends javax.swing.JFrame {
         //pnlSouth.setLayout(new GridLayout(1, 1));
         pnlMenu.setLayout(new GridLayout(1, 1));
         scrollPaneSouth.getVerticalScrollBar().setUnitIncrement(600);
+        lblDentalAssistantImg.setIcon(new ImageIcon("icons/dentalAssistantSouth.png"));
     }
 
     private void paintForm() {
         pnlWest.setBackground(ColorConstant.GREEN_STRONG);
         pnlEast.setBackground(ColorConstant.GREEN_SPRING);
-        pnlSouth.setBackground(ColorConstant.GRAY);
+        pnlSouth.setBackground(ColorConstant.GREEN_STRONG);
+        //pnlSouth.setBackground(new Color(240, 240, 240));
         pnlJaw.setBackground(ColorConstant.GREEN_SPRING);
         pnlToothRoots.setBackground(ColorConstant.GREEN_SPRING);
         pnlToothSides.setBackground(ColorConstant.GREEN_SPRING);
@@ -301,11 +402,11 @@ public class FormCardboard extends javax.swing.JFrame {
         pnlSideStateLegend.setBackground(ColorConstant.GREEN_SPRING);
         pnlDynamicContent.setBackground(ColorConstant.GREEN_STRONG);
         scrollPaneToothInterventions.getViewport().setBackground(ColorConstant.GREEN_SPRING);
+        pnlToothLabel.setBackground(ColorConstant.GREEN_STRONG);
     }
 
     private void preparePnlJaw() {
         add(pnlJaw);
-
         pnlJaw.setLayout(null);
         JLabel[] labels = new JLabel[32];
         for (int i = 0; i <= 31; i++) {
@@ -354,7 +455,8 @@ public class FormCardboard extends javax.swing.JFrame {
             labels[i].setHorizontalAlignment(JLabel.CENTER);
             labels[i].setName(i + "");
             labels[i].setFont(new Font("serif", Font.PLAIN, 30));
-            switch (patient.getTeeth().get(i).getState().getName()) {
+            labels[i].setToolTipText(patient.getTeeth().get(i).getLabel().toString());
+            switch (patient.getTeeth().get(i).getCurrentState().getName()) {
                 case "odstranjen":
                     labels[i].setText("X");
                     break;
@@ -369,6 +471,7 @@ public class FormCardboard extends javax.swing.JFrame {
                 removeTeethBorders();
                 lbl.setBorder(new LineBorder(Color.yellow, 2));
                 selectedTooth = patient.getTeeth().get(Integer.parseInt(lbl.getName()));
+                lblToothLabel.setText(selectedTooth.getLabel().toString());
                 refreshToothViews(new Date());
             }
 
@@ -426,15 +529,29 @@ public class FormCardboard extends javax.swing.JFrame {
     }
 
     private void populateToothSideStatesLegend() {
-        Controller.getInstance().getToothSideStates().forEach((state) -> {
-            pnlSideStateLegend.add(new PanelLegend(new Color(state.getColor()), state.getName()));
-        });
+        try {
+            Controller.getInstance().getAllToothSideStates().forEach((state) -> {
+                pnlSideStateLegend.add(new PanelLegend(new Color(state.getColor()), state.getName()));
+            });
+        } catch (Exception ex) {
+            JLabel errorMessage = new JLabel(new FalseIcon());
+            errorMessage.setToolTipText(ex.getMessage());
+            pnlSideStateLegend.add(errorMessage);
+            //JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom učitvanja oznaka strana zuba", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+        }
     }
 
     private void populateToothRootStatesLegend() {
-        Controller.getInstance().getToothRootStates().forEach((state) -> {
-            pnlRootStateLegend.add(new PanelLegend(new Color(state.getColor()), state.getName()));
-        });
+        try {
+            Controller.getInstance().getAllToothRootStates().forEach((state) -> {
+                pnlRootStateLegend.add(new PanelLegend(new Color(state.getColor()), state.getName()));
+            });
+        } catch (Exception ex) {
+            //JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom učitvanja oznaka strana zuba", "Greška", JOptionPane.OK_OP
+            JLabel errorMessage = new JLabel(new FalseIcon());
+            errorMessage.setToolTipText(ex.getMessage());
+            pnlRootStateLegend.add(errorMessage);
+        }
     }
 
     private void setStartLook() {
@@ -443,15 +560,16 @@ public class FormCardboard extends javax.swing.JFrame {
         tableModelToothInterventions.setTooth(selectedTooth);
         pnlToothRoots.add(PanelTooth.getToothRootsPanel(selectedTooth, 100, new Date()));
         pnlToothSides.add(new PanelToothSides(selectedTooth, new Date()));
+        lblToothLabel.setText(selectedTooth.getLabel().toString());
     }
 
     private void prepareMenu() {
         menuBar = new PanelMenuBar(pnlDynamicContent);
         pnlMenu.add(menuBar);
         pnlNewIntervention = new PanelNewIntervention(this, selectedTooth);
-        menuBar.addNewMenuItem(pnlNewIntervention, "newIntervention");
-        menuBar.addNewMenuItem(new PanelPatientProfile(patient), "user");
-        menuBar.addNewMenuItem(new PanelPatientStatistics(patient), "statistics");
+        menuBar.addNewMenuItem(new PanelPatientProfile(patient), "user","osnovni podaci");
+        menuBar.addNewMenuItem(pnlNewIntervention, "newIntervention","nova intervencija");
+        menuBar.addNewMenuItem(new PanelPatientStatistics(patient), "statistics","info");
     }
 
     private void populateTeethView() {

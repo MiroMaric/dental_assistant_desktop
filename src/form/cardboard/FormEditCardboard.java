@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 public class FormEditCardboard extends FormCardboardInfo {
 
     public FormEditCardboard(Frame parent, boolean modal, Patient patient) {
-        super(parent, modal,patient);
+        super(parent, modal, patient);
         prepareForm();
     }
 
@@ -25,13 +25,15 @@ public class FormEditCardboard extends FormCardboardInfo {
         btn.setText("Izmeni");
         btn.addActionListener((ActionEvent e) -> {
             if (formIsValid()) {
-                populatePatient();
-                if (Controller.getInstance().updatePatient(patient)) {
-                    JOptionPane.showMessageDialog(this, "Podaci o pacijentu su uspešno izmenjeni", "Uspešno izmenjeni podaci", JOptionPane.OK_OPTION,new SuccessIcon());
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Došlo je do greške", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+                try {
+                    Controller.getInstance().updatePatient(getNewPatientFromForm());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+                    return;
                 }
+                populatePatient();
+                JOptionPane.showMessageDialog(this, "Podaci o pacijentu su uspešno izmenjeni", "Uspešno izmenjeni podaci", JOptionPane.OK_OPTION, new SuccessIcon());
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Podaci nisu uneti ispravno", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
             }

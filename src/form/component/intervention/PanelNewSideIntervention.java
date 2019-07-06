@@ -8,6 +8,7 @@ import domain.tooth.ToothSideLabel;
 import domain.tooth.ToothSideState;
 import form.ColorConstant;
 import form.component.PanelToothSides;
+import icon.FalseIcon;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -22,7 +23,7 @@ import javax.swing.JRadioButton;
 public class PanelNewSideIntervention extends PanelNewInterventionItem {
 
     private SideIntervention sideIntervention;
-    private HashMap<ToothSideLabel,ToothSideState> currentStatesOfSides;
+    private HashMap<ToothSideLabel, ToothSideState> currentStatesOfSides;
     private List<JLabel> lblsSideLabels;
     private PanelToothSides toothView;
     private HashMap<String, ToothSideState> hashMapToothSideStates;
@@ -220,8 +221,7 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
         pnlView.add(toothView);
         pnlView.revalidate();
     }
-    
-    
+
     @Override
     public void setNewTooth(Tooth tooth) {
         this.tooth = tooth;
@@ -233,7 +233,17 @@ public class PanelNewSideIntervention extends PanelNewInterventionItem {
     }
 
     private void populatePnlBtnGroupSideStates() {
-        List<ToothSideState> sideStates = Controller.getInstance().getToothSideStates();
+        List<ToothSideState> sideStates;
+        try {
+            sideStates = Controller.getInstance().getAllToothSideStates();
+        } catch (Exception ex) {
+            //JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom učitvanja oznaka strana zuba", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            JLabel errorMessage = new JLabel(new FalseIcon());
+            errorMessage.setToolTipText("Trenutno nije moguće prikazati stanja");
+            pnlBtnGroupSideStates.removeAll();
+            pnlBtnGroupSideStates.add(errorMessage);
+            return;
+        }
         sideStates.forEach((state) -> {
             JRadioButton btn = new JRadioButton(state.getName());
             btn.setForeground(ColorConstant.LIGHT_COLOR);

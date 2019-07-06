@@ -3,13 +3,13 @@ package form.component.intervention;
 import controller.Controller;
 import domain.intervention.InterventionItem;
 import domain.intervention.RootIntervention;
-import domain.intervention.SideIntervention;
 import domain.tooth.Tooth;
 import domain.tooth.ToothRoot;
 import domain.tooth.ToothRootLabel;
 import domain.tooth.ToothRootState;
 import form.ColorConstant;
 import form.component.PanelTooth;
+import icon.FalseIcon;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -116,7 +116,7 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem {
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblStatusChoice, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                    .addComponent(pnlBtnGroupRootStates, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(pnlBtnGroupRootStates, javax.swing.GroupLayout.PREFERRED_SIZE, 89, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblView, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -207,7 +207,17 @@ public class PanelNewRootIntervention extends PanelNewInterventionItem {
     }
 
     private void populatePnlBtnGroupRootStates() {
-        List<ToothRootState> rootStates = Controller.getInstance().getToothRootStates();
+        List<ToothRootState> rootStates;
+        try {
+            rootStates = Controller.getInstance().getAllToothRootStates();
+        } catch (Exception ex) {
+            //JOptionPane.showMessageDialog(this, "Došlo je do greške prilikom učitvanja oznaka korena zuba", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            JLabel errorMessage = new JLabel(new FalseIcon());
+            errorMessage.setToolTipText("Trenutno nije moguće prikazati stanja");
+            pnlBtnGroupRootStates.removeAll();
+            pnlBtnGroupRootStates.add(errorMessage);
+            return;
+        }
         hashMapToothRootStates.clear();
         rootStates.forEach((state) -> {
             JRadioButton btn = new JRadioButton(state.getName());

@@ -299,7 +299,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnRemove">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Poni&#x161;ti"/>
+        <Property name="text" type="java.lang.String" value="Otka&#x17e;i"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemoveActionPerformed"/>

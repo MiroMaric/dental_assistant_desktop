@@ -1,16 +1,20 @@
 package form.component.menu_item;
 
 import form.ColorConstant;
+import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class PanelMenuItem extends javax.swing.JPanel {
 
-    JPanel content;
-    String iconName;
-    public PanelMenuItem(JPanel panel, String iconName) {
+    private JPanel content;
+    private final String iconName;
+    private final String label;
+    
+    public PanelMenuItem(JPanel panel, String iconName, String label) {
         this.content = panel;
         this.iconName = iconName;
+        this.label = label;
         initComponents();
         setMenuItemIcon();
         paintMenuItem();
@@ -28,7 +32,7 @@ public class PanelMenuItem extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(60, 67));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        lblMenuItem.setBackground(new java.awt.Color(102, 102, 102));
+        lblMenuItem.setBackground(new java.awt.Color(0, 81, 81));
         lblMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMenuItem.setText(" ");
@@ -61,9 +65,9 @@ public class PanelMenuItem extends javax.swing.JPanel {
     }
 
     public void setMenuItemPointer() {
-        lblMenuItemPointer.setIcon(new ImageIcon("icons/pointer.png"));
+        lblMenuItemPointer.setIcon(new ImageIcon("icons/pointer_new.png"));
     }
-
+    
     public void removeMenuItemPointer() {
         lblMenuItemPointer.setIcon(null);
         lblMenuItemPointer.revalidate();
@@ -71,7 +75,8 @@ public class PanelMenuItem extends javax.swing.JPanel {
     }
 
     private void paintMenuItem() {
-        lblMenuItem.setBackground(ColorConstant.GRAY);
+        //lblMenuItem.setBackground(ColorConstant.GRAY);
+        lblMenuItem.setBackground(ColorConstant.MENU_COLOR);
         lblMenuItemPointer.setBackground(ColorConstant.GREEN_STRONG);
     }
 

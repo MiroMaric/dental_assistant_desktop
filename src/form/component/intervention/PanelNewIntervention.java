@@ -5,6 +5,7 @@ import domain.intervention.Intervention;
 import domain.intervention.InterventionItem;
 import domain.intervention.RootIntervention;
 import domain.intervention.SideIntervention;
+import domain.intervention.ToothIntervention;
 import domain.tooth.Tooth;
 import form.ColorConstant;
 import form.MyTableCellRenderer;
@@ -28,7 +29,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     private PanelNewInterventionItem pnlNewInterventionItem;
     private TableModelToothInterventionItems tableModelToothInterventions;
 
-    public PanelNewIntervention(FormCardboard parent,Tooth tooth) {
+    public PanelNewIntervention(FormCardboard parent, Tooth tooth) {
         this.parent = parent;
         this.tooth = tooth;
         prepareTempFields();
@@ -103,6 +104,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         scrollPaneTblInterventionItems.setViewportView(tblInterventionItems);
 
         txtInterventionNote.setColumns(20);
+        txtInterventionNote.setLineWrap(true);
         txtInterventionNote.setRows(5);
         jScrollPane3.setViewportView(txtInterventionNote);
 
@@ -116,6 +118,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblSideMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblSideMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblSideMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSideMenuItem.setToolTipText("strana");
         lblSideMenuItem.setMaximumSize(new java.awt.Dimension(30, 15));
         lblSideMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -126,6 +129,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblRootMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblRootMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblRootMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblRootMenuItem.setToolTipText("koren");
         lblRootMenuItem.setMaximumSize(new java.awt.Dimension(30, 15));
         lblRootMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -136,6 +140,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblToothMenuItem.setBackground(new java.awt.Color(0, 153, 153));
         lblToothMenuItem.setForeground(new java.awt.Color(255, 255, 255));
         lblToothMenuItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblToothMenuItem.setToolTipText("zub");
         lblToothMenuItem.setMaximumSize(new java.awt.Dimension(30, 15));
         lblToothMenuItem.setPreferredSize(new java.awt.Dimension(30, 15));
         lblToothMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -236,7 +241,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
                         .addComponent(lblInterventionNote)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 18, Short.MAX_VALUE))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -269,9 +274,12 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         if (item instanceof SideIntervention) {
             SideIntervention sideIntervention = (SideIntervention) item;
             sideIntervention.getToothSide().getSideInterventions().add(sideIntervention);
-        }else if(item instanceof RootIntervention){
+        } else if (item instanceof RootIntervention) {
             RootIntervention rootIntervention = (RootIntervention) item;
             rootIntervention.getToothRoot().getRootInterventions().add(rootIntervention);
+        }else if (item instanceof ToothIntervention) {
+            ToothIntervention toothIntervention = (ToothIntervention) item;
+            toothIntervention.getTooth().getToothInterventions().add(toothIntervention);
         }
         intervention.getItems().add(item);
         parent.refreshToothViews(new Date());
@@ -281,7 +289,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
 
     private void btnRemoveInterventionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInterventionItemActionPerformed
         int index = tblInterventionItems.getSelectedRow();
-        if(index==-1){
+        if (index == -1) {
             JOptionPane.showMessageDialog(this, "Niste izabrali nijednu stavku", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
             return;
         }
@@ -290,9 +298,12 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         if (interventionItem instanceof SideIntervention) {
             SideIntervention si = (SideIntervention) interventionItem;
             si.getToothSide().getSideInterventions().remove(si);
-        }else if (interventionItem instanceof RootIntervention) {
+        } else if (interventionItem instanceof RootIntervention) {
             RootIntervention ri = (RootIntervention) interventionItem;
             ri.getToothRoot().getRootInterventions().remove(ri);
+        }else if (interventionItem instanceof ToothIntervention) {
+            ToothIntervention ti = (ToothIntervention) interventionItem;
+            ti.getTooth().getToothInterventions().remove(ti);
         }
         intervention.getItems().remove(interventionItem);
         parent.refreshToothViews(new Date());
@@ -300,20 +311,21 @@ public class PanelNewIntervention extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRemoveInterventionItemActionPerformed
 
     private void pnlSaveInterventionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlSaveInterventionMouseClicked
-        if(tableModelToothInterventions.getRowCount()==0){
+        if (tableModelToothInterventions.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Niste uneli nijednu stavku intervencije", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
             return;
         }
         intervention.setDate(new Date());
         intervention.setNote(txtInterventionNote.getText());
         intervention.setUser(Session.getInstance().getUser());
-        if(Controller.getInstance().saveIntervention(intervention)){
-            JOptionPane.showMessageDialog(this, "Intervencija je sačuvana", "Intervencija", JOptionPane.OK_OPTION,new SuccessIcon());
+        try {
+            Controller.getInstance().saveIntervention(intervention);
+            JOptionPane.showMessageDialog(this, "Intervencija je sačuvana", "Intervencija", JOptionPane.OK_OPTION, new SuccessIcon());
             prepareTblInterventionItem();
             setStartView();
             prepareTempFields();
-        }else{
-            JOptionPane.showMessageDialog(this, "Došlo je do greške", "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
         }
     }//GEN-LAST:event_pnlSaveInterventionMouseClicked
 
@@ -361,8 +373,7 @@ public class PanelNewIntervention extends javax.swing.JPanel {
         lblInterventionNote.setForeground(ColorConstant.LIGHT_COLOR);
         scrollPaneTblInterventionItems.getViewport().setBackground(ColorConstant.GREEN_STRONG);
     }
-    
-    
+
     private void setMenuIcons() {
         lblRootMenuItem.setIcon(new ImageIcon("icons/intervention_item/toothRootInterventionItem.png"));
         lblToothMenuItem.setIcon(new ImageIcon("icons/intervention_item/toothInterventionItem.png"));

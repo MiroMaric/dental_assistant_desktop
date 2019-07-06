@@ -38,15 +38,15 @@ public class PanelMenuBar extends javax.swing.JPanel {
     }
 
     private void paintMenuBar() {
-        setBackground(ColorConstant.GRAY);
+        setBackground(ColorConstant.MENU_COLOR);
     }
 
     private void adjustMenuBar() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     }
 
-    public void addNewMenuItem(JPanel panel, String iconName) {
-        PanelMenuItem menuItem = new PanelMenuItem(panel, iconName);
+    public void addNewMenuItem(JPanel panel, String iconName,String label) {
+        PanelMenuItem menuItem = new PanelMenuItem(panel, iconName,label);
         if(currentlyActiveMenuItem==null){
             currentlyActiveMenuItem = menuItem;
             currentlyActiveMenuItem.setMenuItemPointer();
@@ -55,6 +55,7 @@ public class PanelMenuBar extends javax.swing.JPanel {
         menuItems.add(menuItem);
         add(menuItem);
         revalidate();
+        menuItem.setToolTipText(label);
         addListenerToMenuItem(menuItem);
     }
 

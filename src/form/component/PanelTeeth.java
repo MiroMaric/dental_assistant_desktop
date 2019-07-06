@@ -1,6 +1,7 @@
 package form.component;
 
 import domain.Patient;
+import form.ColorConstant;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 public class PanelTeeth extends javax.swing.JPanel {
 
-    Patient patient;
+    private final Patient patient;
 
     public PanelTeeth(Patient patient) {
         this.patient = patient;
@@ -21,9 +22,9 @@ public class PanelTeeth extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBackground(new java.awt.Color(255, 153, 153));
         setMaximumSize(new java.awt.Dimension(750, 32767));
-        setPreferredSize(new java.awt.Dimension(400, 450));
-        setLayout(new java.awt.GridLayout(4, 16));
+        setLayout(new java.awt.GridLayout(1, 0));
     }// </editor-fold>//GEN-END:initComponents
 
     private void populateTeethPanel() {
@@ -77,7 +78,7 @@ public class PanelTeeth extends javax.swing.JPanel {
     }
 
     private void paintPanel() {
-        setBackground(new Color(220, 220, 220));
+        setBackground(new Color(200, 200, 200));
     }
 
 

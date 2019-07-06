@@ -1,25 +1,31 @@
 package form;
 
-import form.cardboard.FormSearchCardboard;
 import controller.Controller;
+import form.cardboard.FormSearchCardboard;
+import domain.Appointment;
 import form.cardboard.FormNewCardboard;
 import form.component.TitleBar;
+import icon.ErrorIcon;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableCellRenderer;
 import utill.SettingsLoader;
 
 public class FormMain extends javax.swing.JFrame {
-    
+
     TableModelSchedule scheduleModel;
+
     public FormMain() {
-        scheduleModel = new TableModelSchedule(Controller.getInstance().getAppointments());
         //decorateForm();
         initComponents();
         adjustForm();
@@ -249,11 +255,11 @@ public class FormMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblScheduleSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblScheduleSettingsMouseClicked
-        new FormScheduleSettings(this, true,scheduleModel).setVisible(true);
+        new FormScheduleSettings(this, true, scheduleModel).setVisible(true);
     }//GEN-LAST:event_lblScheduleSettingsMouseClicked
 
     private void lblNewCardboardMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNewCardboardMousePressed
-        new FormNewCardboard(this, true,null).setVisible(true);
+        new FormNewCardboard(this, true, null).setVisible(true);
     }//GEN-LAST:event_lblNewCardboardMousePressed
 
     private void lblSearchCardboardMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchCardboardMousePressed
@@ -273,7 +279,7 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_lblPreviousMousePressed
 
     private void txtSearchAppointmentKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchAppointmentKeyReleased
-        TableModelSchedule tm = (TableModelSchedule)tblSchedule.getModel();
+        TableModelSchedule tm = (TableModelSchedule) tblSchedule.getModel();
         String filter = txtSearchAppointment.getText().trim().toLowerCase();
         tm.filter(filter);
     }//GEN-LAST:event_txtSearchAppointmentKeyReleased
@@ -282,6 +288,11 @@ public class FormMain extends javax.swing.JFrame {
         int row = tblSchedule.getSelectedRow();
         int column = tblSchedule.getSelectedColumn();
         GregorianCalendar time = calculateTime(row, column);
+        if(time.before(new GregorianCalendar()) && scheduleModel.getScheduledAppointments(time).isEmpty()){
+            JOptionPane.showMessageDialog(this, "Nije moguće rezervisati termin",
+                                            "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            return;
+        }
         new FormNewAppointment(this, true, time, scheduleModel).setVisible(true);
     }//GEN-LAST:event_tblScheduleMousePressed
 
@@ -323,7 +334,7 @@ public class FormMain extends javax.swing.JFrame {
         lblScheduleSettings.setIcon(new ImageIcon("icons/settings.png"));
         lblNewCardboard.setIcon(new ImageIcon("icons/newCardboard.png"));
         lblSearchCardboard.setIcon(new ImageIcon("icons/searchCardboard.png"));
-        
+
         lblNewCardboard.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -350,6 +361,20 @@ public class FormMain extends javax.swing.JFrame {
     }
 
     private void prepareSchedule() {
+        try {
+            List<Appointment> appointments = Controller.getInstance().getAllAppointments();
+            scheduleModel = new TableModelSchedule(appointments);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                                            "Greška", JOptionPane.OK_OPTION, new ErrorIcon());
+            addComponentListener(new ComponentAdapter(){
+                @Override
+                public void componentShown(ComponentEvent e) {
+                    dispose();
+                }
+            });
+            return;
+        }
         tblSchedule.setModel(scheduleModel);
         TableCellRenderer tcr = new TableCellRendererSchedule();
         tblSchedule.setDefaultRenderer(Object.class, tcr);
@@ -366,9 +391,9 @@ public class FormMain extends javax.swing.JFrame {
 
     //Da li ovo treba biti ovde?
     private GregorianCalendar calculateTime(int row, int column) {
-        GregorianCalendar time = (GregorianCalendar)scheduleModel.getDateFrom().clone();
-        time.add(GregorianCalendar.DAY_OF_YEAR, column-1);
-        time.set(GregorianCalendar.HOUR_OF_DAY, row+SettingsLoader.getInstance().getStartTime());
+        GregorianCalendar time = (GregorianCalendar) scheduleModel.getDateFrom().clone();
+        time.add(GregorianCalendar.DAY_OF_YEAR, column - 1);
+        time.set(GregorianCalendar.HOUR_OF_DAY, row + SettingsLoader.getInstance().getStartTime());
         time.set(GregorianCalendar.MINUTE, 0);
         time.set(GregorianCalendar.SECOND, 1);
         return time;
@@ -381,12 +406,12 @@ public class FormMain extends javax.swing.JFrame {
         scheduleScrollPane.getViewport().setBackground(ColorConstant.GREEN_SPRING);
         lblScheduleDate.setForeground(ColorConstant.LIGHT_COLOR);
     }
-    
-    public void refreshScheduleDateFromDateToLabel(){
+
+    public void refreshScheduleDateFromDateToLabel() {
         SimpleDateFormat sfm = new SimpleDateFormat("MMM");
         SimpleDateFormat sfd = new SimpleDateFormat("dd");
-        lblScheduleDate.setText(sfm.format(scheduleModel.getDateFrom().getTime())+" "+sfd.format(scheduleModel.getDateFrom().getTime())+
-                " - "+sfm.format(scheduleModel.getDateTo().getTime())+" "+sfd.format(scheduleModel.getDateTo().getTime()));
+        lblScheduleDate.setText(sfm.format(scheduleModel.getDateFrom().getTime()) + " " + sfd.format(scheduleModel.getDateFrom().getTime())
+                + " - " + sfm.format(scheduleModel.getDateTo().getTime()) + " " + sfd.format(scheduleModel.getDateTo().getTime()));
     }
-    
+
 }

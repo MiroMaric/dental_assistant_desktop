@@ -9,7 +9,7 @@ import form.component.myfield.MyInputTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.BorderFactory;
-import storage.StorageUser;
+import session.Session;
 
 public class FormLogIn extends javax.swing.JFrame {
 
@@ -59,27 +59,31 @@ public class FormLogIn extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnLogIn1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 5, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pnlLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnLogIn1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 5, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnlLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblError)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnLogIn1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblError))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLogIn1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10))
         );
 
@@ -123,15 +127,14 @@ public class FormLogIn extends javax.swing.JFrame {
 
     //Dodeljivanje vrednosti mojim poljima
     private void initFields() {
-        pnlUsername = new MyInputTextField("Korisničko ime", "", null, true);
+        pnlUsername = new MyInputTextField("Korisničko ime:", "", null, true);
         pnlUsername.setValue("miko");
-        pnlPassword = new MyInputPasswordField("Sifra:", "", null, true);
+        pnlPassword = new MyInputPasswordField("Šifra:", "", null, true);
         pnlPassword.setValue("mikomaric");
         pnlLogIn.add(pnlUsername);
         pnlLogIn.add(pnlPassword);
     }
 
-    //Metoda koja vrsi prijavljivanje korisnika
     private void logIn() {
         lblError.setText("");
         String username = pnlUsername.getValue().toString().trim();
@@ -139,14 +142,11 @@ public class FormLogIn extends javax.swing.JFrame {
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
                 User user = Controller.getInstance().logIn(username, password);
-                if (user != null) {
-                    this.dispose();
-                    new FormMain().setVisible(true);
-                    StorageUser.getInstance().setUser(user);
-                } else {
-                    lblError.setText("Pogrešno korisničko ime ili šifra");
-                }
+                Session.getInstance().setUser(user);
+                new FormMain().setVisible(true);
+                this.dispose();
             } catch (Exception e) {
+                //lblError.setText("Pogrešno korisničko ime ili šifra");
                 lblError.setText(e.getMessage());
             }
         } else {
